@@ -1,0 +1,11 @@
+back/env
+back/venv
+back/__pycache__
+back/app/__pycache__
+.idea
+ __pycache__/
+ *.pyc
+
+frontend/node_modules
+# frontend/.env
+
