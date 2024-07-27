@@ -264,10 +264,10 @@ const Sidebar = () => {
                                                         <a href="/pages/reports/generateMushak/index">{t('General Mushak')}</a>
                                                     </li>
                                                     <li>
-                                                        <a href="/pages/reports/" target="_blank">{t('Treasury Challan')}</a>
+                                                        <a href="/pages/reports/treasuryChallan/index">{t('Treasury Challan')}</a>
                                                     </li>
                                                     <li>
-                                                        <a href="/pages/reports/" target="_blank">{t('Payable 9.1')}</a>
+                                                        <a href="/pages/reports/payble91/index">{t('Payable 9.1')}</a>
                                                     </li>
                                                     <li>
                                                         <a href="/pages/reports/" target="_blank">{t('Payable Voucher')}</a>

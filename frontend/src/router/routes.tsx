@@ -44,7 +44,10 @@ const Mushak610Intex = lazy(() => import('../pages/Reports/Generate_Mushak/Musha
 const Mushak610 = lazy(() => import('../pages/Reports/Generate_Mushak/Mushak610/mushak610'));
 const Mushak91Intex = lazy(() => import('../pages/Reports/Generate_Mushak/Mushak91/index'));
 const Mushak91 = lazy(() => import('../pages/Reports/Generate_Mushak/Mushak91/mushak91'));
-
+const TreasuryChallan = lazy(() => import('../pages/Reports/Treasury_Challan/index'));
+const AddTreasuryChallan = lazy(() => import('../pages/Reports/Treasury_Challan/components/AddTreasuryChallan'));
+const Payble91 = lazy(() => import('../pages/Reports/Payble91/index'));
+const AddPayble91 = lazy(() => import('../pages/Reports/Payble91/components/AddPayble91'));
 
 
 
@@ -603,6 +606,23 @@ const routes = [
         path: '/pages/report/mushak91/subform/note_64',
         element: <Mushak91Note64 />,
     },
+    {
+        path: '/pages/reports/treasuryChallan/index',
+        element: <TreasuryChallan />,
+    },
+    {
+        path: '/pages/reports/treasuryChallan/add',
+        element: <AddTreasuryChallan />,
+    },
+    {
+        path: '/pages/reports/payble91/index',
+        element: <Payble91 />,
+    },
+    {
+        path: '/pages/reports/payble91/add',
+        element: <AddPayble91 />,
+    },
+
 
 
     //Company Settings
