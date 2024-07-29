@@ -6,7 +6,6 @@ import sortBy from 'lodash/sortBy';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../../store/themeConfigSlice';
 import IconPlus from '../../../components/Icon/IconPlus';
-
 import IconEdit from '../../../components/Icon/IconEdit';
 import axios from 'axios';
 import personAdd from './component/authorisedAdd';
@@ -45,7 +44,7 @@ const index = () => {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Export Table'));
+        dispatch(setPageTitle('Authorised Person Table'));
     });
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];

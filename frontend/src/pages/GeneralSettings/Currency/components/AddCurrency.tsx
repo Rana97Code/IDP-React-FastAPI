@@ -20,10 +20,10 @@ const AddCurrency = () => {
             updatedBy: '0'
         }
         try {
-            const data = await axios.post("http://localhost:8080/bmitvat/api/v1/unit", currency)
+            const data = await axios.post("http://localhost:8080/bmitvat/api/v1/currency", currency)
                 .then(function (response) {
                     console.log(response);
-                    navigate("/pages/settings/unit");
+                    navigate("/pages/settings/currency");
                 })
             // if(response.status==200){
             // }else{

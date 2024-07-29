@@ -38,7 +38,7 @@ const costingAdd = () => {
       
   
       try {
-         await axios.post(`${baseUrl}/costing/add_costing`, costing, {headers})
+        await axios.post(`${baseUrl}/costing/add_costing`, costing, {headers})
           .then(function (response) {
             if(response){
               navigate("/pages/settings/costing");
@@ -69,7 +69,7 @@ const costingAdd = () => {
                                     Costing Name
                                 </label>
                                 <input id="costingName" type="text" placeholder="Enter Costing Name" className="form-input flex-1" 
-                                 name = "costing_name" onChange={(e) => setName(e.target.value)} required />
+                                name = "costing_name" onChange={(e) => setName(e.target.value)} required />
                             </div>
                             <div className="flex sm:flex-row flex-col">
                                 <label htmlFor="costingType" className="mb-0 sm:w-1/4 sm:ltr:mr-8 rtl:ml-2" >Costing type</label>
@@ -89,12 +89,10 @@ const costingAdd = () => {
                             </div>
                           
                             <div className="flex items-center justify-center gap-6 pt-9">
-                               
                                     <button type="submit" className="btn btn-success gap-2">
                                         <IconFile className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
                                         Submit
                                     </button>
-                              
                             </div>
                         </form>
                     </div>

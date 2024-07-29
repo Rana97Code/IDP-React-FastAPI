@@ -8,7 +8,7 @@ import { setPageTitle } from '../../store/themeConfigSlice';
 import axios from 'axios';
 
 
-const LocalPurchaseInvoice = () => {
+const ImportServicePurchaseInvoice = () => {
     const params = useParams();
 
 
@@ -37,7 +37,7 @@ const LocalPurchaseInvoice = () => {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Local Purchase Invoice'));
+        dispatch(setPageTitle('Import Service Purchse Invoice'));
     });
 
     interface suppliers {
@@ -73,9 +73,6 @@ const LocalPurchaseInvoice = () => {
     const [supplierAddress, setSuppliersAddress] = useState();
     const [supplierTin, setSuppliersTin] = useState();
     const [supplierType, setSuppliersType] = useState();
-
-
-
 
 
     const [page, setPage] = useState(1);
@@ -218,4 +215,4 @@ const LocalPurchaseInvoice = () => {
     );
 };
 
-export default LocalPurchaseInvoice;
+export default ImportServicePurchaseInvoice;

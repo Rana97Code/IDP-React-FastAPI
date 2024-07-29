@@ -8,7 +8,7 @@ import { setPageTitle } from '../../store/themeConfigSlice';
 import axios from 'axios';
 
 
-const LocalPurchaseInvoice = () => {
+const ForeignPurchaseInvoice = () => {
     const params = useParams();
 
 
@@ -37,7 +37,7 @@ const LocalPurchaseInvoice = () => {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Local Purchase Invoice'));
+        dispatch(setPageTitle('Foreign Purchse Invoice'));
     });
 
     interface suppliers {
@@ -218,4 +218,4 @@ const LocalPurchaseInvoice = () => {
     );
 };
 
-export default LocalPurchaseInvoice;
+export default ForeignPurchaseInvoice;

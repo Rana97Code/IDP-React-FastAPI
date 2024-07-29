@@ -2,10 +2,20 @@ import React, { useContext,useState, useEffect } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import IconFile from '../../../components/Icon/IconFile';
 import IconTrashLines from '../../../components/Icon/IconTrashLines';
+import { useDispatch } from 'react-redux';
+import { setPageTitle } from '../../../store/themeConfigSlice';
 import axios from 'axios';
 import UserContex from '../../../context/UserContex';
 
 const userEdit = () => {
+
+
+  const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(setPageTitle('User Add Table'));
+    });
+
+
   const [unitName, setName] = useState("");
   const [unitAbbr, setAbbr] = useState("");
   const navigate = useNavigate();

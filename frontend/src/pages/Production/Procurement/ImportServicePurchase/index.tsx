@@ -29,7 +29,7 @@ const index = () => {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Export Table'));
+        dispatch(setPageTitle('Import Service Purchase Table'));
     });
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
@@ -106,7 +106,7 @@ const index = () => {
                                     sortable: true,
                                     render: ({ id, pinvoiceNo }) => (
                                         <div >
-                                            <NavLink to={"/pages/invoice/foreign_purchase/" + id} className="text-cyan-500" >
+                                            <NavLink to={"/pages/invoice/import_purhcase/" + id} className="text-cyan-500" >
                                                 {pinvoiceNo}
                                             </NavLink>
                                         </div>

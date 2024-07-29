@@ -12,24 +12,24 @@ import IconUpload from '../../../components/Icon/IconUpload';
 import IconDownload from '../../../components/Icon/IconDownload';
 import IconX from '../../../components/Icon/IconX';
 import IconSend from '../../../components/Icon/IconSend';
-import axios from 'axios';
 import { ImageListType } from 'react-images-uploading';
-import AddCurrency from './components/AddCurrency';
+import axios from 'axios';
 import UserContex from '../../../context/UserContex';
+import AddCurrency from './components/AddCurrency';
 
 
 const rowData = [
     {
         id: 1,
-        roleName: 'Superadmin',
-        costing_type: 'direct',
+        currency_name: 'Taka',
+        symbol: '৳',
         status: { tooltip: 'Active', color: 'success' },
         action: '',
     },
     {
         id: 2,
-        roleName: 'Bank charges',
-        costing_type: 'indirect',
+        currency_name: 'Dollar',
+        symbol: '$',
         status: { tooltip: 'Inactive', color: 'danger' },
         action: '',
     },
@@ -69,7 +69,7 @@ const index = () => {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Costing Table'));
+        dispatch(setPageTitle('Currency Table'));
     });
 
 
@@ -102,8 +102,8 @@ const index = () => {
             return initialRecords.filter((item: any) => {
                 return (
                     item.id.toString().includes(search.toLowerCase()) ||
-                    item.costing_name.toLowerCase().includes(search.toLowerCase()) ||
-                    item.costing_type.toLowerCase().includes(search.toLowerCase()) ||
+                    item.currency_name.toLowerCase().includes(search.toLowerCase()) ||
+                    item.symbol.toLowerCase().includes(search.toLowerCase()) ||
                     item.status.tooltip.toLowerCase().includes(search.toLowerCase()) ||
                     item.action.toLowerCase().includes(search.toLowerCase())
                 );
@@ -118,12 +118,7 @@ const index = () => {
     }, [sortStatus]);
 
 
-
-
-
     //Excel File Upload
-
-
 
     const [defaultParams] = useState({ file: '', });
     const [selectedFiles, setSelectedFiles] = useState<File | undefined>(undefined);
@@ -183,7 +178,7 @@ const index = () => {
     };
 
 
-    // File Upload
+    //File Upload
     const [codeArr, setCodeArr] = useState<string[]>([]);
 
     const toggleCode = (name: string) => {
@@ -212,9 +207,9 @@ const index = () => {
         const link = document.createElement('a');
 
         // Set the link's href to the public URL of the file
-        link.href = '../../public/assets/excel_file/costing.xlsx';
+        link.href = '../../public/assets/excel_file/currency.xlsx';
 
-        link.download = 'costing.xlsx';
+        link.download = 'currency.xlsx';
 
         // Append the link to the document body
         //   document.body.appendChild(link);
@@ -229,8 +224,8 @@ const index = () => {
     return (
         <div>
             <div className="panel flex items-center justify-between flex-wrap gap-4 text-black">
-                <h2 className="text-xl font-bold">Costing</h2>
-                <div className="flex items-center flex-wrap gap-3">
+                <h2 className="text-xl font-bold">Currency</h2>
+                {/* <div className="flex items-center flex-wrap gap-3">
                     <button type="button" className="btn btn-primary" onClick={downloadFile}>
                         <IconDownload className="ltr:mr-2 rtl:ml-2" />
                         Download Sample File
@@ -239,10 +234,10 @@ const index = () => {
                         <IconUpload className="ltr:mr-2 rtl:ml-2" />
                         Excel File Upload
                     </button>
-                </div>
+                </div> */}
             </div>
 
-            <Transition appear show={addFileModal} as={Fragment}>
+            {/* <Transition appear show={addFileModal} as={Fragment}>
                 <Dialog as="div" open={addFileModal} onClose={() => setAddFileModal(false)} className="relative z-[51]">
                     <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
                         <div className="fixed inset-0 bg-[black]/60" />
@@ -298,17 +293,17 @@ const index = () => {
                         </div>
                     </div>
                 </Dialog>
-            </Transition>
+            </Transition> */}
 
             <div className="pt-5 grid grid-cols-5 grid-flow-row-dense gap-2">
 
                 <div className="panel col-span-2 " >
                     <AddCurrency />
                 </div>
-                {/*----------------- Costing list start ---------------*/}
+                {/*----------------- Currency list start ---------------*/}
                 <div className="panel col-span-3 " id="stack_form">
                     <div className="flex items-center justify-between mb-2">
-                        <h5 className="font-semibold text-lg dark:text-white-light">Costing List</h5>
+                        <h5 className="font-semibold text-lg dark:text-white-light">Currency List</h5>
                     </div>
                     <div className="flex md:items-center justify-between md:flex-row flex-col mb-2 gap-5">
                         <div className="flex items-center flex-wrap"></div>
@@ -322,12 +317,12 @@ const index = () => {
                             records={recordsData}
                             columns={[
                                 { accessor: 'id', title: 'Id', sortable: true },
-                                { accessor: 'costing_name', title: 'Costing Name', sortable: true },
+                                { accessor: 'currency_name', title: 'Currency Name', sortable: true },
                                 {
-                                    accessor: 'costing_type',
-                                    title: 'Costing Type',
+                                    accessor: 'symbol',
+                                    title: 'Symbol',
                                     sortable: true,
-                                    render: ({ costing_type }) => <span className={`p-2 badge ${costing_type == "direct" ? 'badge-outline-success' : 'badge-outline-danger'} `}>{costing_type == 'direct' ? 'Direct' : 'Indirect'}</span>,
+                                    render: ({ symbol }) => <span className={`p-2 badge ${symbol == "direct" ? 'badge-outline-success' : 'badge-outline-danger'} `}>{symbol == 'direct' ? 'Direct' : 'Indirect'}</span>,
                                 },
                                 {
                                     accessor: 'status',
@@ -363,7 +358,7 @@ const index = () => {
                         />
                     </div>
                 </div>
-                {/*-------------- Costing list end -------------*/}
+                {/*-------------- Currency list end -------------*/}
 
 
             </div>

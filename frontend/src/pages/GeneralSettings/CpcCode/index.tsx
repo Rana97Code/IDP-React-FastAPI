@@ -16,7 +16,6 @@ import IconX from '../../../components/Icon/IconX';
 import IconSend from '../../../components/Icon/IconSend';
 import axios from 'axios';
 import ImageUploading, { ImageListType } from 'react-images-uploading';
-// import CPCAdd from './components/cpcAdd';
 import UserContex from '../../../context/UserContex';
 // import CpcAdd  from './components/cpcAdd';
 
@@ -57,11 +56,12 @@ import AddCPC from './components/addCpc';
 
 
 
-
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Export Table'));
+        dispatch(setPageTitle('CPC Table'));
     });
+
+
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);

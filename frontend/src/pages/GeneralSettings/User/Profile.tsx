@@ -2,7 +2,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { IRootState } from '../../../store';
 import { setPageTitle } from '../../../store/themeConfigSlice';
-import { useContext,useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import IconMail from '../../../components/Icon/IconMail';
 import IconPhone from '../../../components/Icon/IconPhone';
 import IconFile from '../../../components/Icon/IconFile';
@@ -14,15 +14,22 @@ import UserContex from '../../../context/UserContex';
 
 
 const profile = () => {
+
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(setPageTitle('Profile Table'));
+    });
+
+
     const user = useContext(UserContex);
-    const baseUrl= user.base_url;
+    const baseUrl = user.base_url;
 
     // const dispatch = useDispatch();
-    const [user_id,setUserId]=useState("");
-    const [username,setName]=useState("");
-    const [userProfile,setTokenProfile]=useState("");
-    const [useremail,setTokenEmail]=useState("");
-    const [userphone,setTokenPhone]=useState("");
+    const [user_id, setUserId] = useState("");
+    const [username, setName] = useState("");
+    const [userProfile, setTokenProfile] = useState("");
+    const [useremail, setTokenEmail] = useState("");
+    const [userphone, setTokenPhone] = useState("");
 
     //for form data
     const [userName, setUsername] = useState("");
@@ -46,79 +53,76 @@ const profile = () => {
     useEffect(() => {
         // dispatch(setPageTitle('Profile'));
 
-             //Data from session token
-             const token = localStorage.getItem('Token');
-             if(token){
-     
-               const jwt = jwtDecode(token);
-                    var user = jwt.sub;
-                    var email = (jwt as any).u_email;
-                    var profile = (jwt as any).pro_pic;
-                    var uphone = (jwt as any).u_phone;
-                    // var user_id = (jwt as any).u_id;
-                 //    console.log(user);
-     
-                 if (user !== undefined) {
-                    setName(user);
-                 }
-                    // setUserId(user_id);
-                    setTokenEmail(email);
-                    setTokenProfile(profile);
-                    setTokenPhone(uphone);
-     
-             }
-             getUserDetails();
-    },[]);
-
-
-
-
-  const getUserDetails = async()=>{
+        //Data from session token
         const token = localStorage.getItem('Token');
-        if(token){
+        if (token) {
+
+            const jwt = jwtDecode(token);
+            var user = jwt.sub;
+            var email = (jwt as any).u_email;
+            var profile = (jwt as any).pro_pic;
+            var uphone = (jwt as any).u_phone;
+            // var user_id = (jwt as any).u_id;
+            //    console.log(user);
+
+            if (user !== undefined) {
+                setName(user);
+            }
+            // setUserId(user_id);
+            setTokenEmail(email);
+            setTokenProfile(profile);
+            setTokenPhone(uphone);
+
+        }
+        getUserDetails();
+    }, []);
+
+
+
+
+    const getUserDetails = async () => {
+        const token = localStorage.getItem('Token');
+        if (token) {
             const jwt = jwtDecode(token);
             var userid = (jwt as any).u_id;
 
             const bearer = JSON.parse(token);
-            const headers= { Authorization: `Bearer ${bearer}` }
+            const headers = { Authorization: `Bearer ${bearer}` }
 
 
-        await axios.get(`${baseUrl}/bmitvat/api/get_user/${userid}`,{headers})
-            .then((response) => {
-                // setInitialRecords(response.data);
-                const data = response.data;
-                // console.log(data);
-                setFirstName(data.firstName)
-                setLastName(data.lastName)
-                setEmail(data.userEmail)
-                setPhone(data.userPhone)
-                setNid(data.userNid)
-                setProfile(data.profileImage)
-                setNidImg(data.nidScan)
-                setUserId(data.id);
+            await axios.get(`${baseUrl}/bmitvat/api/get_user/${userid}`, { headers })
+                .then((response) => {
+                    // setInitialRecords(response.data);
+                    const data = response.data;
+                    // console.log(data);
+                    setFirstName(data.firstName)
+                    setLastName(data.lastName)
+                    setEmail(data.userEmail)
+                    setPhone(data.userPhone)
+                    setNid(data.userNid)
+                    setProfile(data.profileImage)
+                    setNidImg(data.nidScan)
+                    setUserId(data.id);
 
-            })
-            .catch((error) => {
-                console.error('Error fetching data:', error);
+                })
+                .catch((error) => {
+                    console.error('Error fetching data:', error);
 
-            });
-         }
+                });
+        }
 
     }
 
 
-
-      
-     
 
 
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-    
-            // if(nidScan && profileImage){
-            if(profileImage){
+
+        // if(nidScan && profileImage){
+        if (profileImage) {
             const formData = new FormData();
             // formData.append('username', userName);
             formData.append('firstName', firstName);
@@ -134,34 +138,34 @@ const profile = () => {
             // formData.append('status', status);
             formData.append('createdBy', `0`);
             formData.append('updatedBy', `0`);
-            
-            
-            
+
+
+
             try {
                 console.warn(formData);
                 const token = localStorage.getItem('Token');
-                if(token){
-                const bearer1 = JSON.parse(token);
-        
-                const headers= { Authorization: `Bearer ${bearer1}`,'Content-Type': 'multipart/form-data'  }
-                await axios.put(`${baseUrl}/bmitvat/api/update_user/${user_id}`, formData, {headers})
-                .then(function (response) {
-                    // console.log(response);
-                    navigate("/index");
-                    console.warn("Insert Successfull");
-                })
-            
-                .catch(function(error) {
-                console.warn("Insert Unsuccessfull");
-                navigate("/pages/user/profile");
-                })
-            }
+                if (token) {
+                    const bearer1 = JSON.parse(token);
+
+                    const headers = { Authorization: `Bearer ${bearer1}`, 'Content-Type': 'multipart/form-data' }
+                    await axios.put(`${baseUrl}/bmitvat/api/update_user/${user_id}`, formData, { headers })
+                        .then(function (response) {
+                            // console.log(response);
+                            navigate("/index");
+                            console.warn("Insert Successfull");
+                        })
+
+                        .catch(function (error) {
+                            console.warn("Insert Unsuccessfull");
+                            navigate("/pages/user/profile");
+                        })
+                }
             } catch (err) {
                 console.log(err);
             }
 
-            }
-    
+        }
+
     }
 
 
@@ -181,7 +185,7 @@ const profile = () => {
                         </div>
                         <div className="mb-6">
                             <div className="flex flex-col justify-center items-center">
-                                <img src={'/assets/images/users/'+ userProfile} alt="img" className="w-24 h-24 rounded-full object-cover  mb-5" />
+                                <img src={'/assets/images/users/' + userProfile} alt="img" className="w-24 h-24 rounded-full object-cover  mb-5" />
                                 <p className="font-semibold text-primary text-xl">{username}</p>
                             </div>
                             <ul className="mt-5 flex flex-col max-w-[160px] m-auto space-y-4 font-semibold text-white-dark">
@@ -219,39 +223,39 @@ const profile = () => {
                                             <label htmlFor="horizontalEmail" className="mb-0 sm:w-1/4 sm:ltr:mr-2 rtl:ml-2">
                                                 First Name
                                             </label>
-                                            <input id="horizontalEmail" type="text" value={firstName} onChange={(e)=>setFirstName(e.target.value)} className="form-input flex-1" required />
+                                            <input id="horizontalEmail" type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="form-input flex-1" required />
                                         </div>
                                         <div className="flex sm:flex-row flex-col">
                                             <label htmlFor="horizontalEmail" className="mb-0 sm:w-1/4 sm:ltr:mr-2 rtl:ml-2">
                                                 Last Name
                                             </label>
-                                            <input id="horizontalEmail" type="text" value={lastName} onChange={(e)=>setLastName(e.target.value)} className="form-input flex-1" required />
+                                            <input id="horizontalEmail" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} className="form-input flex-1" required />
                                         </div>
                                         <div className="flex sm:flex-row flex-col">
                                             <label htmlFor="horizontalEmail" className="mb-0 sm:w-1/4 sm:ltr:mr-2 rtl:ml-2">
                                                 Email
                                             </label>
-                                            <input id="horizontalEmail" type="email" value={useremail} onChange={(e)=>setEmail(e.target.value)} className="form-input flex-1" required />
+                                            <input id="horizontalEmail" type="email" value={useremail} onChange={(e) => setEmail(e.target.value)} className="form-input flex-1" required />
                                         </div>
                                         <div className="flex sm:flex-row flex-col">
                                             <label htmlFor="horizontalEmail" className="mb-0 sm:w-1/4 sm:ltr:mr-2 rtl:ml-2">
                                                 Phone
                                             </label>
-                                            <input id="horizontalEmail" type="text" value={userPhone} onChange={(e)=>setPhone(e.target.value)} className="form-input flex-1" required />
+                                            <input id="horizontalEmail" type="text" value={userPhone} onChange={(e) => setPhone(e.target.value)} className="form-input flex-1" required />
                                         </div>
                                         <div className="flex sm:flex-row flex-col ">
                                             <label htmlFor="horizontalEmail" className="mb-0 sm:w-1/4 sm:ltr:mr-2 rtl:ml-2">
                                                 Profile Pic
                                             </label>
-                                                <input id="horizontalEmail" type="file" onChange={(e)=>setProfile(e.target.files![0])} className="form-input flex-1" required />
-                                                {/* <span className="text-white-dark">Images only (image/*)
+                                            <input id="horizontalEmail" type="file" onChange={(e) => setProfile(e.target.files![0])} className="form-input flex-1" required />
+                                            {/* <span className="text-white-dark">Images only (image/*)
                                                 </span> */}
                                         </div>
                                         <div className="flex sm:flex-row flex-col">
                                             <label htmlFor="horizontalEmail" className="mb-0 sm:w-1/4 sm:ltr:mr-2 rtl:ml-2">
                                                 NDI Number
                                             </label>
-                                            <input id="horizontalEmail" type="text" value={userNid} onChange={(e)=>setNid(e.target.value)} className="form-input flex-1" required />
+                                            <input id="horizontalEmail" type="text" value={userNid} onChange={(e) => setNid(e.target.value)} className="form-input flex-1" required />
                                         </div>
                                         <div className="flex items-center  justify-center gap-6">
                                             <button type="submit" className="btn btn-primary gap-2">

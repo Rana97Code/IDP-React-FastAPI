@@ -6,10 +6,11 @@ import axios from 'axios';
 import UserContex from '../../../.././context/UserContex';
 import { preventDefault } from '@fullcalendar/core/internal';
 
+
 const EditCurrency = () => {
 
     const [currencyName, setCurrencyName] = useState("");
-    const [displayName, setDisplayName] = useState("");
+    const [symbol, setSymbol] = useState("");
     const [currencyStatus, setStatus] = useState("");
 
     const params = useParams();
@@ -27,7 +28,7 @@ const EditCurrency = () => {
                     const data = response.data;
                     //console.log(data);
                     setCurrencyName(data.currency_name)
-                    setDisplayName(data.display_name)
+                    setSymbol(data.display_name)
                     setStatus(data.currency_status)
                 })
                 .catch((error) => {
@@ -47,7 +48,7 @@ const EditCurrency = () => {
 
         const currency = {
             currency_name: currencyName,
-            display_name: displayName,
+            symbol: symbol,
             currency_status: currencyStatus,
             user_id: '1'
         }
@@ -74,7 +75,7 @@ const EditCurrency = () => {
     return (
         <div>
             <div className="panel flex items-center justify-between flex-wrap gap-4">
-                <h2 className="text-xl">Currency</h2>
+                <h2 className="text-xl font-bold">Currency</h2>
             </div>
             <div className="panel mt-6">
                 <div id="forms_grid">
@@ -93,13 +94,13 @@ const EditCurrency = () => {
                             </div>
                             <div className="grid  gap-4">
                                 <div className="grid grid-cols-5 gap--x-2 gap-y-3">
-                                    <label htmlFor="displayName" className='col-span-1 text-base'>Display Name</label>
-                                    <input id="displayName" type="text" placeholder="Enter Display Name" className="form-input py-2.5 text-base col-span-4" name="display_name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} required />
+                                    <label htmlFor="symbol" className='col-span-1 text-base'>Symbol</label>
+                                    <input id="symbol" type="text" placeholder="Enter symbol" className="form-input py-2.5 text-base col-span-4" name="symbol" value={symbol} onChange={(e) => setSymbol(e.target.value)} required />
                                 </div>
                             </div>
                             <div>
                                 <div className="grid grid-cols-5 gap--x-2 gap-y-3" >
-                                    <label htmlFor="currrencyStatus" className='col-span-1 text-base'>Currency Status</label>
+                                    <label htmlFor="currrencyStatus" className='col-span-1 text-base'>Status</label>
                                     <select className="form-select text-dark col-span-4 text-base" value={currencyStatus} onChange={(e) => setStatus(e.target.value)} name="currency_status" required>
                                         <option >Select Status</option>
                                         <option value="1">Active</option>

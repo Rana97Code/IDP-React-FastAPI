@@ -13,20 +13,19 @@ const EditSuppliers = lazy(() => import('../pages/Relationship/Suppliers/EditSup
 const Items = lazy(() => import('../pages/Inventory/Items/index'));
 const ItemsAdd = lazy(() => import('../pages/Inventory/Items/AddItems'));
 const ItemsEdit = lazy(() => import('../pages/Inventory/Items/EditItems'));
-
-
-const ServicePurchase = lazy(() => import('../pages/Production/Procurement/ServicePurchase/index'));
-const ServicePurchaseAdd = lazy(() => import('../pages/Production/Procurement/ServicePurchase/components/addServicePurchase'));
-const ImportPurchase = lazy(() => import('../pages/Production/Procurement/ImportServicePurchase/index'));
-const ImportPurchaseAdd = lazy(() => import('../pages/Production/Procurement/ImportServicePurchase/components/AddImportPurchase'));
-
-
 const LocalPurchase = lazy(() => import('../pages/Production/Procurement/LocalPurchase/index'));
 const LocalPurchaseAdd = lazy(() => import('../pages/Production/Procurement/LocalPurchase/components/addLocalPurchase'));
+const LocalPurchaseInvoice = lazy(() => import('../pages/Invoice/LocalPurchaseInvoice'));
 const ForeignPurchase = lazy(() => import('../pages/Production/Procurement/ForeigenPurchase/index'));
 const ForeignPurchaseAdd = lazy(() => import('../pages/Production/Procurement/ForeigenPurchase/components/addForeignPurchase'));
+const ForeignPurchaseInvoice = lazy(() => import('../pages/Invoice/ForeignPurchaseInvoice'));
+const ImportPurchase = lazy(() => import('../pages/Production/Procurement/ImportServicePurchase/index'));
+const ImportPurchaseAdd = lazy(() => import('../pages/Production/Procurement/ImportServicePurchase/components/AddImportPurchase'));
+const ImportPurchaseInvoice = lazy(() => import('../pages/Invoice/ImportServicePurchaseInvoice'));
+const ServicePurchase = lazy(() => import('../pages/Production/Procurement/ServicePurchase/index'));
+const ServicePurchaseAdd = lazy(() => import('../pages/Production/Procurement/ServicePurchase/components/addServicePurchase'));
 const DebitNote = lazy(() => import('../pages/Production/Procurement/DebitNote/index'));
-const AddDebitNote = lazy(() => import('../pages/Production/Procurement/DebitNote/components/AddDebitNote'));
+const DebitNoteAdd = lazy(() => import('../pages/Production/Procurement/DebitNote/components/AddDebitNote'));
 const IssueVds = lazy(() => import('../pages/Production/Procurement/IssueVDS/index'));
 const IssueVdsAdd = lazy(() => import('../pages/Production/Procurement/IssueVDS/components/AddIssueVds'));
 const UploadExcel = lazy(() => import('../pages/Sales/UploadExcel/index'));
@@ -39,6 +38,8 @@ const AddCreditNote = lazy(() => import('../pages/Sales/CreditNote/components/Ad
 const AdjustCreditNote = lazy(() => import('../pages/Sales/CreditNote/components/AdjustCreditNote'));
 const ReceiveVds = lazy(() => import('../pages/Sales/ReceiveVds/index'));
 const AddReceiveVds = lazy(() => import('../pages/Sales/ReceiveVds/components/AddReceiveVds'));
+
+
 const GenerateMushak = lazy(() => import('../pages/Reports/Generate_Mushak/index'));
 const Mushak61Intex = lazy(() => import('../pages/Reports/Generate_Mushak/Mushak61/index'));
 const Mushak61 = lazy(() => import('../pages/Reports/Generate_Mushak/Mushak61/mushak61'));
@@ -56,11 +57,6 @@ const PaybleVoucher = lazy(() => import('../pages/Reports/PaybleVoucher/index'))
 const AddPaybleVoucher = lazy(() => import('../pages/Reports/PaybleVoucher/components/AddPaybleVoucher'));
 const ReceviableVoucher = lazy(() => import('../pages/Reports/ReceivableVoucher/index'));
 const AddReceviableVoucher = lazy(() => import('../pages/Reports/ReceivableVoucher/components/AddReceivableVoucher'));
-const Currency = lazy(() => import('../pages/GeneralSettings/Currency/index'));
-const EditCurrency = lazy(() => import('../pages/GeneralSettings/Currency/components/EditCurrency'));
-
-
-
 
 
 const RawMatOpeningStock = lazy(() => import('../pages/Inventory/OpeningStock/RawMaterials'));
@@ -88,14 +84,14 @@ const CostingEdit = lazy(() => import('../pages/GeneralSettings/Costing/componen
 const CustomHouse = lazy(() => import('../pages/GeneralSettings/CustomHouse/index'));
 const CustomHouseAdd = lazy(() => import('../pages/GeneralSettings/CustomHouse/components/addCustomHouse'));
 const CustomHouseEdit = lazy(() => import('../pages/GeneralSettings/CustomHouse/components/editCustomHouse'));
+const Currency = lazy(() => import('../pages/GeneralSettings/Currency/index'));
+const EditCurrency = lazy(() => import('../pages/GeneralSettings/Currency/components/EditCurrency'));
 const HsCode = lazy(() => import('../pages/GeneralSettings/HsCode/index'));
 const CpcCode = lazy(() => import('../pages/GeneralSettings/CpcCode/index'));
 const CpcAdd = lazy(() => import('../pages/GeneralSettings/CpcCode/components/cpcAdd'));
 const CpcEdit = lazy(() => import('../pages/GeneralSettings/CpcCode/components/cpcEdit'));
 
-const LocalPurchaseInvoice = lazy(() => import('../pages/Invoice/LocalPurchaseInvoice'));
 
-const DebitNoteAdd = lazy(() => import('../pages/Production/Procurement/DebitNote/components/AddDebitNote'));
 
 const ProductionBOM = lazy(() => import('../pages/Production/ProductionBOM/BOMIndex'));
 const ProductionBOMAdd = lazy(() => import('../pages/Production/ProductionBOM/AddBOM'));
@@ -107,8 +103,6 @@ const ProductionWipInvoice =lazy(() => import('../pages/Invoice/ProductionWipInv
 
 const LocalSales = lazy(() => import('../pages/Production/Sales/LocalSales/index'));
 const LocalSalesAdd = lazy(() => import('../pages/Production/Sales/LocalSales/components/AddLocalSales'));
-
-const ReceiveVdsAdd = lazy(() => import('../pages/Production/Sales/ReceiveVds/components/AddReceiveVds'));
 
 const Mushak63 = lazy(() => import('../pages/Reports/Sales/Mushak-6.3'));
 
@@ -227,14 +221,6 @@ const routes = [
         element: <ItemsEdit />,
     },
     {
-        path: '/pages/purchase/debit_note/index',
-        element: <DebitNote />,
-    },
-    {
-        path: '/pages/purchase/debit_note/add',
-        element: <AddDebitNote />,
-    },
-    {
         path: '/pages/sales/excel_sales/index',
         element: <UploadExcel />,
     },
@@ -275,10 +261,6 @@ const routes = [
         element: <AddReceiveVds />,
     },
 
-
-
-
-
     {
         path: '/pages/inventory/opening/rawmaterials',
         element: <RawMatOpeningStock />,
@@ -308,6 +290,10 @@ const routes = [
         element: <ForeignPurchaseAdd />,
     },
     {
+        path: '/pages/invoice/foreign_purchase/:id',
+        element: <ForeignPurchaseInvoice />,
+    },
+    {
         path: '/pages/procurment/service_purchase/index',
         element: <ServicePurchase />,
     },
@@ -322,6 +308,10 @@ const routes = [
     {
         path: '/pages/procurment/import_purchase/add',
         element: <ImportPurchaseAdd />,
+    },
+    {
+        path: '/pages/invoice/import_purchase/:id',
+        element: <ImportPurchaseInvoice />,
     },
     {
         path: '/pages/procurment/debitNote/index',
@@ -339,7 +329,6 @@ const routes = [
         path: '/pages/procurment/issueVds/add',
         element: <IssueVdsAdd />,
     },
-
     {
         path: '/pages/production_bom/index',
         element: <ProductionBOM />,
@@ -372,24 +361,6 @@ const routes = [
         path: '/pages/sales/local_sales/add',
         element: <LocalSalesAdd />,
     },
-    // {
-    //     path: '/pages/sales/creditNote/index',
-    //     element: <CreditNote />,
-    // },
-    // {
-    //     path: '/pages/sales/creditNote/add',
-    //     element: <CreditNoteAdd />,
-    // },
-    {
-        path: '/pages/sales/receiveVds/index',
-        element: <ReceiveVds />,
-    },
-    {
-        path: '/pages/sales/receiveVds/add',
-        element: <ReceiveVdsAdd />,
-    },
-
-    
 
     // Reports
     {
