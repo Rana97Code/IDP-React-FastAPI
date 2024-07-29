@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, Fragment, useEffect } from 'react';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import sortBy from 'lodash/sortBy';
 import { useDispatch } from 'react-redux';
-import { setPageTitle } from '../../../store/themeConfigSlice';
-import IconPlus from '../../../components/Icon/IconPlus';
+import { setPageTitle } from '../../../../store/themeConfigSlice';
+import IconPlus from '../../../../components/Icon/IconPlus';
 import axios from 'axios';
-
 
 const index = () => {
 
@@ -16,15 +15,17 @@ const index = () => {
         if (token) {
             const bearer = JSON.parse(token);
             const headers = { Authorization: `Bearer ${bearer}` }
-        axios.get('http://localhost:8080/bmitvat/api/debit_note/all_debit_note',{headers})
-            .then((response) => {
-                setInitialRecords(response.data);
-            })
-            .catch((error) => {
-                console.error('Error fetching data:', error);
-            });
+
+            axios.get('http://localhost:8080/bmitvat/api/purchase/all-purchase', { headers })
+                .then((response) => {
+                    setInitialRecords(response.data);
+                })
+                .catch((error) => {
+                    console.error('Error fetching data:', error);
+                });
         }
     }, []);
+
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -53,13 +54,10 @@ const index = () => {
         setInitialRecords(() => {
             return initialRecords.filter((item: any) => {
                 return (
-                    item.serialNo.toString().includes(search.toLowerCase()) ||
-                    item.debitNoteNo.toLowerCase().includes(search.toLowerCase()) ||
-                    item.dnIssueDate.toLowerCase().includes(search.toLowerCase()) ||
-                    item.totalSd.toLowerCase().includes(search.toLowerCase()) ||
-                    item.totalVat.toLowerCase().includes(search.toLowerCase()) ||
-                    item.grandTotal.toLowerCase().includes(search.toLowerCase()) ||
-                    item.action.toLowerCase().includes(search.toLowerCase())
+                    item.id.toString().includes(search.toLowerCase()) ||
+                    item.pinvoiceNo.toLowerCase().includes(search.toLowerCase()) ||
+                    item.supplierName.toLowerCase().includes(search.toLowerCase())||
+                    item.lcNo.toLowerCase().includes(search.toLowerCase())
                 );
             });
         });
@@ -72,12 +70,13 @@ const index = () => {
     }, [sortStatus]);
 
 
+
     return (
         <div>
             <div className="panel flex items-center justify-between flex-wrap gap-4 text-black">
-                <h2 className="text-xl font-bold">Debit Note</h2>
-                <div className="flex flex-wrap gap-3">
-                    <Link to="/pages/purchase/debit_note/add" className="btn btn-primary gap-1">
+                <h2 className="text-xl font-bold">Import Service Purchase</h2>
+                <div className="flex items-center flex-wrap gap-3">
+                    <Link to="/pages/procurment/import_purchase/add" className="btn btn-primary gap-1">
                         <IconPlus />
                         Add New
                     </Link>
@@ -88,32 +87,34 @@ const index = () => {
                 {/*----------------- User list start ---------------*/}
                 <div className="panel col-span-3 " id="stack_form">
                     <div className="flex md:items-center justify-between md:flex-row flex-col mb-4.5 gap-5">
-                        <div className="flex items-center justify-between mb-3">
-                            <h5 className="font-semibold text-lg dark:text-white-light">Debit Note List</h5>
+                        <div className="flex items-center justify-between mb-6">
+                            <h5 className="font-semibold text-lg dark:text-white-light">Import Service Purchase List</h5>
                         </div>
-                        <input type="search" className="form-input w-auto mb-3 " placeholder="Search..." />
+                        <input type="text" className="h-12 w-56 border border-slate-300 pr-8 pl-5 rounded z-0 focus:shadow focus:outline-none" placeholder="Search..."></input>
                     </div>
+
                     <div className="datatables">
                         <DataTable
                             highlightOnHover
                             className="whitespace-nowrap table-hover"
                             records={recordsData}
                             columns={[
-                                { accessor: 'debitNoteNo', title: 'Debit Invoice', sortable: true },
-                                { accessor: 'dnIssueDate', title: 'Issue Date', sortable: true },
-                                { accessor: 'totalSd', title: 'Total Amount', sortable: true },
-                                { accessor: 'totalVat', title: 'Total Vat', sortable: true },
-                                { accessor: 'grandTotal', title: 'Total SD', sortable: true },
-                                { accessor: 'id', title: 'Musak', 
+                                { accessor: 'id', title: 'Serial No', sortable: true },
+                                {
+                                    accessor: 'pinvoiceNo',
+                                    title: 'Invoice No',
                                     sortable: true,
-                                    render: ({ id }) => (
+                                    render: ({ id, pinvoiceNo }) => (
                                         <div >
-                                            <NavLink to={"/pages/report/mushak/debit_note/"+ id} className="text-cyan-500" target="_blank">
-                                                Mushak-6.8
+                                            <NavLink to={"/pages/invoice/foreign_purchase/" + id} className="text-cyan-500" >
+                                                {pinvoiceNo}
                                             </NavLink>
                                         </div>
                                     ),
                                 },
+                                { accessor: 'supplierName', title: 'Supplier', sortable: true },
+                                { accessor: 'lcNo', title: 'LC No', sortable: true },
+                                { accessor: 'total', title: 'Total', sortable: true },
                             ]}
                             totalRecords={initialRecords.length}
                             recordsPerPage={pageSize}
@@ -129,7 +130,6 @@ const index = () => {
                     </div>
                 </div>
                 {/*-------------- User list end -------------*/}
-
 
             </div>
         </div>

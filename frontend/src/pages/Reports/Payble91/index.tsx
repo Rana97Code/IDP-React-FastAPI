@@ -31,7 +31,7 @@ const index = () => {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Export Table'));
+        dispatch(setPageTitle('Payble 9.1 Table'));
     });
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
@@ -41,6 +41,23 @@ const index = () => {
 
     const [search, setSearch] = useState('');
     const [sortStatus, setSortStatus] = useState<DataTableSortStatus>({ columnAccessor: 'id', direction: 'asc' });
+
+
+    interface RecordWithIndex {
+        [key: string]: any; // Define the type for each property in the record
+        // index: number; // Add index property
+        // pinvoiceNo: string;
+        date: string;
+        amount: number;
+        type: string;
+    }
+
+    //For Index Number
+    const recordsDataWithIndex: RecordWithIndex[] = recordsData.map((record: RecordWithIndex, index: number) => ({
+        ...record,
+        index: index + 1
+    }));
+
 
     useEffect(() => {
         setPage(1);
@@ -56,8 +73,8 @@ const index = () => {
         setInitialRecords(() => {
             return initialRecords.filter((item: any) => {
                 return (
-                    item.amount.toLowerCase().includes(search.toLowerCase())||
-                    item.date.toLowerCase().includes(search.toLowerCase())||
+                    item.amount.toLowerCase().includes(search.toLowerCase()) ||
+                    item.date.toLowerCase().includes(search.toLowerCase()) ||
                     item.type.toLowerCase().includes(search.toLowerCase())
                 );
             });
@@ -77,7 +94,7 @@ const index = () => {
             <div className="panel flex items-center justify-between flex-wrap gap-4 text-black">
                 <h2 className="text-xl font-bold">Payble 9.1</h2>
                 <div className="flex items-center flex-wrap gap-3">
-                    <Link to="/pages/reports/treasuryChallan/add" className="btn btn-primary gap-1">
+                    <Link to="/pages/reports/payble91/add" className="btn btn-primary gap-1">
                         <IconPlus />
                         Add New
                     </Link>

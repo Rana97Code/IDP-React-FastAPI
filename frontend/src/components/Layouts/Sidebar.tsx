@@ -138,50 +138,54 @@ const Sidebar = () => {
                                 </AnimateHeight>
                             </li>
 
-                            {/*----------- Purchase -----------*/}
+                            {/*----------- Production -----------*/}
                             <li className="menu nav-item">
-                                <button type="button" className={`${currentMenu === 'Purchase' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('Purchase')}>
+                                <button type="button" className={`${currentMenu === 'Production' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('Production')}>
                                     <div className="flex items-center">
                                         <IconMenuScrumboard className="group-hover:!text-primary shrink-0" />
-                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Purchase')}</span>
+                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Production')}</span>
                                     </div>
 
-                                    <div className={currentMenu !== 'Purchase' ? 'rtl:rotate-90 -rotate-90' : ''}>
+                                    <div className={currentMenu !== 'Production' ? 'rtl:rotate-90 -rotate-90' : ''}>
                                         <IconCaretDown />
                                     </div>
                                 </button>
-                                <AnimateHeight duration={300} height={currentMenu === 'Purchase' ? 'auto' : 0}>
+                                <AnimateHeight duration={300} height={currentMenu === 'Production' ? 'auto' : 0}>
                                     <ul className="sub-menu text-gray-500">
-                                        <li>
-                                            <NavLink to="/pages/purchase/service_purchase/index">
-                                                {t('Service Purchase')}
-                                            </NavLink>
-                                        </li>
-
-                                        <li>
-                                            <NavLink to="/pages/purchase/local_purchase/index">
-                                                {t('Local Purchase')}
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink to="/pages/purchase/foreign_purchase/index">
-                                                {t('Foreign Purchase')}
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink to="/pages/purchase/import_purchase/index">
-                                                {t('Import Service Purchase')}
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink to="/pages/purchase/debit_note/index">
-                                                {t('Debit Note')}
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink to="/pages/purchase/issue_vds/index">
-                                                {t('Issue VDS')}
-                                            </NavLink>
+                                        <li className="menu nav-item">
+                                            <button
+                                                type="button"
+                                                className={`${procurementSubMenu ? 'open' : ''
+                                                    } w-full before:bg-gray-300 before:w-[5px] before:h-[5px] before:rounded ltr:before:mr-2 rtl:before:ml-2 dark:text-[#888ea8] hover:bg-gray-100 dark:hover:bg-gray-900`}
+                                                onClick={() => setProcurementSubMenu(!procurementSubMenu)}
+                                            >
+                                                {t('Procurement')}
+                                                <div className={`${procurementSubMenu ? 'rtl:rotate-90 -rotate-90' : ''} ltr:ml-auto rtl:mr-auto`}>
+                                                    <IconCaretsDown fill={true} className="w-4 h-4" />
+                                                </div>
+                                            </button>
+                                            <AnimateHeight duration={300} height={procurementSubMenu ? 'auto' : 0}>
+                                                <ul className="sub-menu text-gray-500">
+                                                    <li>
+                                                        <a href="/pages/procurment/service_purchase/index">{t('Service Purchase')}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/pages/procurment/local_purchase/index">{t('Local Purchase')}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/pages/procurment/foreign_purchase/index">{t('Foregin Purchase')}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/pages/procurment/import_purchase/index">{t('Import Service Purchase')}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/pages/procurment/debitNote/index">{t('Debit Note')}</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/pages/procurment/issueVds/index">{t('Issue VDS')}</a>
+                                                    </li>
+                                                </ul>
+                                            </AnimateHeight>
                                         </li>
                                     </ul>
                                 </AnimateHeight>
@@ -261,19 +265,19 @@ const Sidebar = () => {
                                             <AnimateHeight duration={300} height={errorSubMenu ? 'auto' : 0}>
                                                 <ul className="sub-menu text-gray-500">
                                                     <li>
-                                                        <a href="/pages/reports/generateMushak/index">{t('General Mushak')}</a>
+                                                        <a href="/pages/reports/generate_mushak/index">{t('Generate Mushak')}</a>
                                                     </li>
                                                     <li>
-                                                        <a href="/pages/reports/treasuryChallan/index">{t('Treasury Challan')}</a>
+                                                        <a href="/pages/reports/treasury_challan/index">{t('Treasury Challan')}</a>
                                                     </li>
                                                     <li>
                                                         <a href="/pages/reports/payble91/index">{t('Payable 9.1')}</a>
                                                     </li>
                                                     <li>
-                                                        <a href="/pages/reports/" target="_blank">{t('Payable Voucher')}</a>
+                                                        <a href="/pages/reports/payble_voucher/index">{t('Payable Voucher')}</a>
                                                     </li>
                                                     <li>
-                                                        <a href="/pages/reports/" target="_blank">{t('Receivable Voucher')}</a>
+                                                        <a href="/pages/reports/receivable_voucher/index">{t('Receivable Voucher')}</a>
                                                     </li>
                                                 </ul>
                                             </AnimateHeight>
@@ -344,7 +348,7 @@ const Sidebar = () => {
                                             <NavLink to="/pages/settings/custom_house">{t('Custom-House')}</NavLink>
                                         </li>
                                         <li>
-                                            <NavLink to="/pages/settings/currency">{t('Currency')}</NavLink>
+                                            <NavLink to="/pages/settings/currency/index">{t('Currency')}</NavLink>
                                         </li>
                                         <li>
                                             <NavLink to="/pages/settings/unit">{t('Unit')}</NavLink>

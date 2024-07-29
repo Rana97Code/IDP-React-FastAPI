@@ -1,13 +1,13 @@
 import React, { ChangeEvent, ChangeEventHandler } from 'react';
 import { useEffect, useState, useRef } from 'react';
-import IconFile from '../../../../components/Icon/IconFile';
-import IconTrashLines from '../../../../components/Icon/IconTrashLines';
+import IconFile from '../../../../../components/Icon/IconFile';
+import IconTrashLines from '../../../../../components/Icon/IconTrashLines';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { exists } from 'i18next';
 
 
-const AddServicePurchase: React.FC = () => {
+const AddImportPurchase: React.FC = () => {
     const navigate = useNavigate();
 
 
@@ -37,7 +37,7 @@ const AddServicePurchase: React.FC = () => {
         itemName: string;
         hsCodeId: number;
         hsCode: string;
-        sd: number;
+        at: number;
         vat: number;
     }
 
@@ -47,13 +47,13 @@ const AddServicePurchase: React.FC = () => {
     const [SuppAddress, setAddress] = useState("");
 
     const [supplier, setSupplier] = useState("");
-    const [entryDate, setEntryDate] = useState(getTodayDate());
-    const [chalanNo, setChalanNo] = useState("");
-    const [chalanDate, setChalanDate] = useState(getTodayDate());
+    const [challanNo, setChallanNo] = useState("");
+    const [billDate, setBillDate] = useState(getTodayDate());
+    const [country, setCountryOrigin] = useState("");
+
     const [fiscalYear, setFiscalYear] = useState("");
 
     const [note, setNote] = useState('');
-
 
 
     useEffect(() => {
@@ -75,7 +75,6 @@ const AddServicePurchase: React.FC = () => {
     }, []);
 
 
-
     const getSupplierId: ChangeEventHandler<HTMLSelectElement> = (event) => {
         const selectedOptionId = event.target.value;
 
@@ -89,7 +88,6 @@ const AddServicePurchase: React.FC = () => {
                     const data = response.data;
                     setSupplier(data.id)
                     setAddress(data.supplierAddress)
-
                 })
                 .catch((error) => {
                     console.error('Error fetching data:', error);
@@ -98,9 +96,27 @@ const AddServicePurchase: React.FC = () => {
     };
 
 
+    const getCountryOrigin: ChangeEventHandler<HTMLSelectElement> = (event) => {
+        const selectedOptionId = event.target.value;
+
+        const token = localStorage.getItem('Token');
+        if (token) {
+            const bearer = JSON.parse(token);
+            const headers = { Authorization: `Bearer ${bearer}` }
+
+            axios.get(`http://localhost:8080/bmitvat/api/supplier/get_supplier/${selectedOptionId}`, { headers })
+                .then((response) => {
+                    const data = response.data;
+                    setCountryOrigin(data.id)
+                })
+                .catch((error) => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+    };
+
 
     async function getItemByKeyUp(event: React.FormEvent<HTMLInputElement>) {
-
 
         const searchInput = event.currentTarget as HTMLInputElement;
         const suggestionsList = document.getElementById('suggestionsList');
@@ -161,7 +177,6 @@ const AddServicePurchase: React.FC = () => {
                         }
 
                         if (clickedValue > 0) {
-
 
                             const token = localStorage.getItem('Token');
                             if (token) {
@@ -234,11 +249,11 @@ const AddServicePurchase: React.FC = () => {
                                     const onlyValue = value1 * value2;
                                     input3.value = onlyValue.toString();
 
-                                    //sd
-                                    const sdWithValue = (onlyValue * value4) / 100;
-                                    input5.value = sdWithValue.toString();
+                                    //at
+                                    const atWithValue = (onlyValue * value4) / 100;
+                                    input5.value = atWithValue.toString();
 
-                                    const vatAblValue = onlyValue + sdWithValue;
+                                    const vatAblValue = onlyValue + atWithValue;
                                     input6.value = vatAblValue.toString();
 
                                     // vat
@@ -263,9 +278,9 @@ const AddServicePurchase: React.FC = () => {
 
                                 const input4 = document.createElement('input');
                                 input4.type = 'number';
-                                input4.name = 'sd';
+                                input4.name = 'at';
                                 input4.className = '';
-                                input4.value = data.sd;
+                                input4.value = data.at;
                                 input4.autocomplete = 'off';
                                 input4.disabled = true;
                                 input4.min = '0';
@@ -274,8 +289,8 @@ const AddServicePurchase: React.FC = () => {
 
                                 const input5 = document.createElement('input');
                                 input5.type = 'number';
-                                input5.name = 'sdAmount';
-                                input5.className = 'total_sd';
+                                input5.name = 'atAmount';
+                                input5.className = 'total_at';
                                 input5.value = '';
                                 input5.autocomplete = 'off';
                                 input5.disabled = true;
@@ -478,7 +493,6 @@ const AddServicePurchase: React.FC = () => {
                                 input9.min = '0';
                                 input9.style.cssText = 'border: 1px solid black; width: 100px;';
 
-
                                 const selectVds = document.createElement('select');
                                 selectVds.name = 'vds';
                                 selectVds.className = '';
@@ -540,7 +554,6 @@ const AddServicePurchase: React.FC = () => {
                                     }
                                 }
 
-
                                 input1.addEventListener('keyup', calculateTotalValue);
                                 input2.addEventListener('keyup', calculateTotalValue);
                                 selectElement.addEventListener('change', calculateTotalValue);
@@ -563,19 +576,19 @@ const AddServicePurchase: React.FC = () => {
                                         }
                                     }
 
-                                    // Grand Total SD Calculation
-                                    let grandTotalSd = 0;
-                                    const SdInput = document.querySelectorAll(`.total_sd`) as NodeListOf<HTMLInputElement>;
+                                    // Grand Total AT Calculation
+                                    let grandTotalAt = 0;
+                                    const AtInput = document.querySelectorAll(`.total_at`) as NodeListOf<HTMLInputElement>;
 
-                                    if (SdInput) {
-                                        SdInput.forEach((input: HTMLInputElement) => {
+                                    if (AtInput) {
+                                        AtInput.forEach((input: HTMLInputElement) => {
                                             const value = parseFloat(input.value) || 0;
-                                            grandTotalSd += value;
+                                            grandTotalAt += value;
                                         });
 
-                                        const grandTotalSdInput = document.getElementById('sdTotal') as HTMLInputElement | null;
-                                        if (grandTotalSdInput !== null) {
-                                            grandTotalSdInput.value = grandTotalSd.toString();
+                                        const grandTotalAtInput = document.getElementById('atTotal') as HTMLInputElement | null;
+                                        if (grandTotalAtInput !== null) {
+                                            grandTotalAtInput.value = grandTotalAt.toString();
                                         }
                                     }
 
@@ -594,7 +607,6 @@ const AddServicePurchase: React.FC = () => {
                                             grandTotalInput.value = grandTotal.toString();
                                         }
                                     }
-
                                 }
 
                                 const newRow = dataTable.insertRow();
@@ -656,21 +668,28 @@ const AddServicePurchase: React.FC = () => {
                     const inputElement = input as HTMLInputElement;
                     const inputElementSelect = input as HTMLSelectElement;
                     const selectValue = inputElement.type === 'select-one' ? inputElementSelect.value : inputElement.value;
-                    rowData[inputElement.name || 'itemId'] = inputElement.value;
+                    rowData[inputElement.name || 'description'] = inputElement.value;
+                    rowData[inputElement.name || 'boeItemNo'] = inputElement.value;
                     rowData[inputElement.name || 'quantity'] = inputElement.value;
+                    rowData[inputElement.name || 'assessablealue'] = inputElement.value;
                     rowData[inputElement.name || 'rate'] = inputElement.value;
-                    rowData[inputElement.name || 'priceValue'] = inputElement.value;
+                    rowData[inputElement.name || 'cdPercent'] = inputElement.value;
+                    rowData[inputElement.name || 'cd'] = inputElement.value;
+                    rowData[inputElement.name || 'rdPercent'] = inputElement.value;
+                    rowData[inputElement.name || 'rd'] = inputElement.value;
+                    rowData[inputElement.name || 'sdPercent'] = inputElement.value;
                     rowData[inputElement.name || 'sd'] = inputElement.value;
-                    rowData[inputElement.name || 'sdAmount'] = inputElement.value;
-                    rowData[inputElement.name || 'vatableValue'] = inputElement.value;
+                    rowData[inputElement.name || 'baseValueVat'] = inputElement.value;
                     rowData[inputElement.name || 'vatType'] = inputElement.value;
-                    rowData[inputElement.name || 'vatRate'] = inputElement.value;
-                    rowData[inputElement.name || 'vatAmount'] = inputElement.value;
-                    rowData[inputElement.name || 'vds'] = selectValue;
+                    rowData[inputElement.name || 'vatPercent'] = inputElement.value;
+                    rowData[inputElement.name || 'vat'] = inputElement.value;
+                    rowData[inputElement.name || 'aitPercent'] = inputElement.value;
+                    rowData[inputElement.name || 'ait'] = inputElement.value;
+                    rowData[inputElement.name || 'atPercent'] = inputElement.value;
+                    rowData[inputElement.name || 'at'] = inputElement.value;
                     rowData[inputElement.name || 'rebate'] = selectValue;
                     rowData[inputElement.name || 'totalAmount'] = inputElement.value;
                 });
-
                 arrayData.push(rowData);
             });
 
@@ -680,23 +699,23 @@ const AddServicePurchase: React.FC = () => {
         console.log(arrayData);
         // const jsonAllItemsData = JSON.stringify(arrayData);
         const TotalVat = document.getElementById('vatTotal') as HTMLInputElement;
-        const TotalSD = document.getElementById('sdTotal') as HTMLInputElement;
+        const TotalAT = document.getElementById('atTotal') as HTMLInputElement;
         const AllTotal = document.getElementById('grandTotal') as HTMLInputElement;
 
-        if (TotalVat || TotalSD || AllTotal) {
+        if (TotalVat || TotalAT || AllTotal) {
             const Vat = TotalVat.value;
-            const SD = TotalSD.value;
+            const AT = TotalAT.value;
             const ALL = AllTotal.value;
 
             const purchase = {
                 supplierId: supplier,
-                entryDate: entryDate,
-                chalanNumber: chalanNo,
-                chalanDate: chalanDate,
+                billNumber: challanNo,
+                billDate: billDate,
                 fiscalYear: fiscalYear,
+                countryId: country, 
                 purchaseItems: arrayData,
                 totalTax: Vat,
-                totalSd: SD,
+                totalAt: AT,
                 grandTotal: ALL,
                 note: note
             }
@@ -709,12 +728,10 @@ const AddServicePurchase: React.FC = () => {
                 const headers = { Authorization: `Bearer ${bearer}` }
                 try {
                     // process.exit();
-
                     await axios.post("http://localhost:8080/bmitvat/api/purchase/add-local-purchase", purchase, { headers })
                         .then(function (response) {
                             navigate("/pages/procurment/local_purchase/index");
                         })
-
                 } catch (err) {
                     console.log(err);
                 }
@@ -723,18 +740,16 @@ const AddServicePurchase: React.FC = () => {
     };
 
 
-
-
     return (
         <div>
             <div className="panel flex items-center justify-between flex-wrap gap-4 text-black">
-                <h2 className="text-xl font-bold">Production Service Purchase</h2>
+                <h2 className="text-xl font-bold">Import Service Purchase</h2>
             </div>
             <div className="pt-5 gap-2">
                 <div className="mb-5">
                     <div className="panel" id="browser_default">
                         <div className="flex items-center justify-between mb-7">
-                            <h5 className="font-semibold text-lg dark:text-white-light">Add New Service Purchase</h5>
+                            <h5 className="font-semibold text-lg dark:text-white-light">Add Import Service Purchase</h5>
                         </div>
                         <div className="mb-5">
                             <form className="space-y-5" onSubmit={handleSubmit}>
@@ -751,31 +766,41 @@ const AddServicePurchase: React.FC = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label htmlFor="supplierAddress">Supplier Address</label>
-                                        <input id="supplierAddress" type="text" value={SuppAddress} className="form-input" required disabled/>
+                                        <label htmlFor="suppAddress">Supplier Address</label>
+                                        <input id="suppAddress" type="text" value={SuppAddress} className="form-input" required disabled/>
                                     </div>
                                     <div>
-                                        <label htmlFor="entryDate">Entry Date</label>
-                                        <input id="entryDate" type="date" className="form-input" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} />
+                                        <label htmlFor="challanNo">BOE/Challan No</label>
+                                        <input id="challanNo" type="text" placeholder="" className="form-input" onChange={(e) => setChallanNo(e.target.value)} required />
                                     </div>
                                     <div>
-                                        <label htmlFor="challanNo">Chalan Number</label>
-                                        <input id="challanNo" type="text" placeholder="" className="form-input" onChange={(e) => setChalanNo(e.target.value)} required />
+                                        <label htmlFor="billDate">Bill Of Entry Date</label>
+                                        <input id="billDate" type="date" className="form-input" value={billDate} onChange={(e) => setBillDate(e.target.value)} />
                                     </div>
                                     <div>
-                                        <label htmlFor="challanDate">Chalan Date</label>
-                                        <input id="challanDate" type="date" className="form-input" value={chalanDate} onChange={(e) => setChalanDate(e.target.value)} />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="fiscalYear">Fiscal Year</label>
-                                        <select id="fiscalYear" className="form-select text-dark col-span-4 text-sm" onChange={(e) => setFiscalYear(e.target.value)} required>
-                                            <option >Please Select</option>
-                                            <option value={"2024"} >2023-2024</option>
-                                            <option value={"2023"} >2022-2023</option>
+                                        <label htmlFor="getCountryOrigin">Country of Origin</label>
+                                        <select id="getCountryOrigin" onChange={getCountryOrigin} className="form-select text-dark col-span-4 text-sm" required >
+                                            <option>Select Country</option>
+                                            {all_suppliers.map((option, index) => (
+                                                <option key={index} value={option.id}>
+                                                    {option.supplierName}
+                                                </option>
+                                            ))}
                                         </select>
-                                        <h5 className='pt-4 text-danger text-sm font-semibold'>*Please Select Fiscal Year</h5>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <label htmlFor="fiscalYear">Fiscal Year</label>
+                                            <select id="fiscalYear" className="form-select text-dark col-span-4 text-sm" onChange={(e) => setFiscalYear(e.target.value)} required>
+                                                <option>Select Year</option>
+                                                <option value={"2024"} >2023-2024</option>
+                                                <option value={"2023"} >2022-2023</option>
+                                            </select>
+                                            <h5 className='pt-4 text-danger text-sm font-semibold'>*Please Select Fiscal Year</h5>
+                                        </div>
                                     </div>
                                 </div>
+
                                 <div className="grid grid-cols-2 gap-x-2 gap-y-3">
                                     <label htmlFor="searchInput" className='col-span-1 text-sm'>Add Items</label>
                                     <input id="searchInput" type="text" className="h-12 border border-slate-300 rounded z-0 focus:shadow focus:outline-none form-input text-sm col-span-2"
@@ -790,16 +815,24 @@ const AddServicePurchase: React.FC = () => {
                                             <tr className="whitespace-nowrap border overflow-x-auto">
                                             <th className="w-1"></th>
                                                 <th className="w-14" >Description</th>
-                                                <th className="w-9 border-black" >Quantity</th>
+                                                <th className="w-9 border-black" >BOE Item No</th>
+                                                <th className="w-14" >Quantity</th>
+                                                <th className="w-9 border-black" >Assessable Value</th>
                                                 <th className="w-9" >Rate(BDT)</th>
-                                                <th className="w-10 border-x-1 border-black" >Value</th>
-                                                <th className="w-6" >SD%</th>
-                                                <th className="w-9 border-x-1 border-black" >SD(BDT)</th>
-                                                <th className="w-14" >Vatable Value(BDT)</th>
-                                                <th className="w-14 border-x-1 border-black" >VAT Type</th>
-                                                <th className="w-7" >VAT(%)</th>
-                                                <th className="w-14 border-x-1 border-black" >VAT(BDT)</th>
-                                                <th className="w-7" >VDS</th>
+                                                <th className="w-10 border-x-1 border-black" >CD Percent</th>
+                                                <th className="w-6" >CD (BDT)</th>
+                                                <th className="w-9 border-x-1 border-black" >RD Percent</th>
+                                                <th className="w-14" >RD(BDT)</th>
+                                                <th className="w-14 border-x-1 border-black" >SD Percent</th>
+                                                <th className="w-7" >SD (BDT)</th>
+                                                <th className="w-14 border-x-1 border-black" >Base Value of VAT(BDT)</th>
+                                                <th className="w-7" >VAT Type</th>
+                                                <th className="w-7 border-x-1 border-black" >VAT Percent</th>
+                                                <th className="w-7" >VAT (BDT)</th>
+                                                <th className="w-7 border-x-1 border-black" >AIT Percent</th>
+                                                <th className="w-7" >AIT (BDT)</th>
+                                                <th className="w-7 border-x-1 border-black" >AT Percent</th>
+                                                <th className="w-7" >AT (BDT)</th>
                                                 <th className="w-7 border-x-1 border-black" >Rebate</th>
                                                 <th className="w-14" >Total Amount</th>
                                                 <th className="w-7" >Action</th>
@@ -810,26 +843,26 @@ const AddServicePurchase: React.FC = () => {
                                     </table>
                                 </div>
                                 <table className='mt-4'>
-                                        <tr className="h-10 border border-black form-input">
-                                            <td className="border-r-2 w-3/5 pr-4" align="right"><strong>Total Vat(BDT)</strong></td>
-                                            <td align="left" className='pl-4'><strong><input type='text' id='vatTotal' disabled /></strong></td>
-                                        </tr>
-                                        <tr className="h-10 border border-black form-input">
-                                            <td className="border-r-2 w-3/5 pr-4" align="right"><strong>Total SD(BDT)</strong></td>
-                                            <td align="left" className='pl-4'><strong id=""><input type='text' id='sdTotal' disabled /></strong></td>
-                                        </tr>
-                                        <tr className="h-10 border border-black form-input">
-                                            <td className="border-r-2 w-3/5 pr-4" align="right"><strong>Grand Total(BDT)</strong></td>
-                                            <td align="left" className='pl-4'><strong><input type="text" id="grandTotal" disabled /></strong>
-                                                <p></p>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <tr className="h-10 border border-black form-input">
+                                        <td className="border-r-2 w-3/5 pr-4" align="right"><strong>Total Vat(BDT)</strong></td>
+                                        <td align="left" className='pl-4'><strong><input type='text' id='vatTotal' disabled /></strong></td>
+                                    </tr>
+                                    <tr className="h-10 border border-black form-input">
+                                        <td className="border-r-2 w-3/5 pr-4" align="right"><strong>Total AT(BDT)</strong></td>
+                                        <td align="left" className='pl-4'><strong id=""><input type='text' id='atTotal' disabled /></strong></td>
+                                    </tr>
+                                    <tr className="h-10 border border-black form-input">
+                                        <td className="border-r-2 w-3/5 pr-4" align="right"><strong>Grand Total(BDT)</strong></td>
+                                        <td align="left" className='pl-4'><strong><input type="text" id="grandTotal" disabled /></strong>
+                                            <p></p>
+                                        </td>
+                                    </tr>
+                                </table>
 
                                 <div className="grid grid-cols-5 gap--x-2 gap-y-3">
                                     {/* <input type="hidden" name="allPurchaseItems" id="allPurchaseItems" /> */}
-                                    <label htmlFor="userName" className='col-span-1 text-sm'>Note</label>
-                                    <textarea id="userName" placeholder="Notes..." className="form-input py-2.5 text-sm col-span-4" onChange={(e) => setNote(e.target.value)} />
+                                    <label htmlFor="note" className='col-span-1 text-sm'>Note</label>
+                                    <textarea id="note" placeholder="Notes..." className="form-input py-2.5 text-sm col-span-4" onChange={(e) => setNote(e.target.value)} />
                                 </div>
 
                                 <div className="flex items-center justify-center gap-6 pt-4">
@@ -853,6 +886,5 @@ const AddServicePurchase: React.FC = () => {
     );
 };
 
-export default AddServicePurchase;
-
+export default AddImportPurchase;
 
