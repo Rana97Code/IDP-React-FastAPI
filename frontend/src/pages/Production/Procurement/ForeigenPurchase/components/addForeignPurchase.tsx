@@ -63,7 +63,7 @@ const addForeignPurchase = () => {
     const [all_suggestitm, setSuggestItem] = useState<suggestItem[]>([]);
 
     const [itemDetails, setItemDetails] = useState<detailsItem[]>([]);
-    const [SuppAddress, setAddress] = useState("");
+    const [suppAddress, setAddress] = useState("");
 
     const [supplier, setSupplier] = useState("");
     const [supplierAdd, setSupplierAdd] = useState("");
@@ -754,6 +754,7 @@ const addForeignPurchase = () => {
 
             const purchase = {
                 supplierId: supplier,
+                supplierAdd: supplierAdd,
                 entryDate: entryDate,
                 boe: boe,
                 boeDate: boeDate,
@@ -822,34 +823,34 @@ const addForeignPurchase = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label htmlFor="browserLname">Supplier Address</label>
-                                        <input id="browserLname" type="text" value={SuppAddress} onChange={(e) => setSupplierAdd(e.target.value)} className="form-input" required />
+                                        <label htmlFor="suppAddress">Supplier Address</label>
+                                        <input id="suppAddress" type="text" value={suppAddress} onChange={(e) => setSupplierAdd(e.target.value)} className="form-input" required />
                                     </div>
                                     <div>
-                                        <label htmlFor="browserLname">Entry Date</label>
-                                        <input id="browserLname" type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="form-input" required />
+                                        <label htmlFor="entryDate">Entry Date</label>
+                                        <input id="entryDate" type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="form-input" required />
                                     </div>
                                     <div>
-                                        <label htmlFor="browserLname">Bill Of Entry/Challan No</label>
-                                        <input id="browserLname" type="text" placeholder="" onChange={(e) => setBoe(e.target.value)} className="form-input" required />
+                                        <label htmlFor="boeNo">BOE/Challan No</label>
+                                        <input id="boeNo" type="text" placeholder="" onChange={(e) => setBoe(e.target.value)} className="form-input" required />
                                     </div>
                                     <div>
-                                        <label htmlFor="browserLname">Bill Of Entry Date</label>
-                                        <input id="browserLname" type="date" value={boeDate} onChange={(e) => setBoeDate(e.target.value)} className="form-input" required />
+                                        <label htmlFor="boeDate">Bill Of Entry Date</label>
+                                        <input id="boeDate" type="date" value={boeDate} onChange={(e) => setBoeDate(e.target.value)} className="form-input" required />
                                     </div>
                                     <div>
-                                        <label htmlFor="browserLname">LC Number</label>
-                                        <input id="browserLname" type="text" placeholder="" onChange={(e) => setLcNumber(e.target.value)} className="form-input" required />
+                                        <label htmlFor="lcNumber">LC Number</label>
+                                        <input id="lcNumber" type="text" placeholder="" onChange={(e) => setLcNumber(e.target.value)} className="form-input" required />
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-6 gap-5 pt-4">
                                     <div>
-                                        <label htmlFor="browserLname">LC Date</label>
-                                        <input id="browserLname" type="date" value={lcDate} onChange={(e) => setLcDate(e.target.value)} className="form-input" required />
+                                        <label htmlFor="lcDate">LC Date</label>
+                                        <input id="lcDate" type="date" value={lcDate} onChange={(e) => setLcDate(e.target.value)} className="form-input" required />
                                     </div>
                                     <div>
-                                        <label htmlFor="gridState">Custom House</label>
-                                        <select id="getCustomhouse" onChange={getHouseId} className="form-select text-dark col-span-4 text-sm" required >
+                                        <label htmlFor="getHouse">Custom House</label>
+                                        <select id="getHouse" onChange={getHouseId} className="form-select text-dark col-span-4 text-sm" required >
                                             <option>Select Custom House</option>
                                             {all_customhouse.map((option, index) => (
                                                 <option key={index} value={option.id}>
@@ -859,12 +860,12 @@ const addForeignPurchase = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label htmlFor="browserLname">House Code</label>
-                                        <input id="browserLname" type="text" value={housecode} onChange={(e) => setHouseCode(e.target.value)} className="form-input" required />
+                                        <label htmlFor="houseCode">House Code</label>
+                                        <input id="houseCode" type="text" value={housecode} onChange={(e) => setHouseCode(e.target.value)} className="form-input" required />
                                     </div>
                                     <div>
-                                        <label htmlFor="gridState">Country Of Origin</label>
-                                        <select id="gridState" onChange={(e) => setCountryId(e.target.value)} className="form-select text-dark col-span-4 text-sm">
+                                        <label htmlFor="setCountry">Country Of Origin</label>
+                                        <select id="setCountry" onChange={(e) => setCountryId(e.target.value)} className="form-select text-dark col-span-4 text-sm">
                                             <option>Select Country</option>
                                             {all_country.map((option, index) => (
                                                 <option key={index} value={option.id}>
@@ -874,16 +875,16 @@ const addForeignPurchase = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label htmlFor="gridState">Data Source</label>
-                                        <select id="gridState" onChange={(e) => setDateSource(e.target.value)} className="form-select text-dark col-span-4 text-sm">
+                                        <label htmlFor="dataSource">Data Source</label>
+                                        <select id="dataSource" onChange={(e) => setDateSource(e.target.value)} className="form-select text-dark col-span-4 text-sm">
                                             <option value={"Boe Data"}>Boe Data</option>
                                             <option value={"Manual Entry For Service"}>Manual Entry For Service</option>
                                             <option value={"Manual Entry For BoE"}>Manual Entry For BoE</option>
                                         </select>
                                     </div>
                                     <div >
-                                        <label htmlFor="gridState">CPC Code</label>
-                                        <select id="gridState" onChange={(e) => setCpcCode(e.target.value)} className="form-select text-dark col-span-4 text-sm" required>
+                                        <label htmlFor="cpcCode">CPC Code</label>
+                                        <select id="cpcCode" onChange={(e) => setCpcCode(e.target.value)} className="form-select text-dark col-span-4 text-sm" required>
                                             <option >Select CPC Code</option>
                                             {all_cpccode.map((option, index) => (
                                                 <option key={index} value={option.id}>
@@ -903,8 +904,8 @@ const addForeignPurchase = () => {
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap--x-2 gap-y-3">
-                                    <label htmlFor="userName" className='col-span-1 text-sm'>Add Items</label>
-                                    <input id="searchInput" type="text" placeholder="Enter Product Name" className="form-input py-2.5 text-sm col-span-2" onInput={getItemByKeyUp} />
+                                    <label htmlFor="addItems" className='col-span-1 text-sm'>Add Items</label>
+                                    <input id="addItems" type="text" placeholder="Enter Product Name" className="form-input py-2.5 text-sm col-span-2" onInput={getItemByKeyUp} />
                                     <ul style={{ cursor: 'pointer' }} className="mt-10 ml-20 w-1/2 absolute bg-slate-300" id="suggestionsList"></ul>
                                 </div>
 

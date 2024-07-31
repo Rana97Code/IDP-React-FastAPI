@@ -8,7 +8,7 @@ import { setPageTitle } from '../../store/themeConfigSlice';
 import axios from 'axios';
 
 
-const LocalPurchaseInvoice = () => {
+const ServicePurchaseInvoice = () => {
     const params = useParams();
 
 
@@ -17,27 +17,27 @@ const LocalPurchaseInvoice = () => {
         if (token) {
             const bearer = JSON.parse(token);
             const headers = { Authorization: `Bearer ${bearer}` }
-        axios.get(`http://localhost:8080/bmitvat/api/purchase/local_purchase_invoice/${params.id}`,{headers})
-            .then((response) => {
-                setRawMaterialsRecords(response.data.purchaseItems);
-                setChalanDate(response.data.supplierDetails.chalanDate);
-                setSuppliersName(response.data.supplierDetails.supplierName);
-                setSuppliersEmail(response.data.supplierDetails.supplierEmail);
-                setSuppliersPhone(response.data.supplierDetails.supplierPhone);
-                setSuppliersCountry(response.data.supplierDetails.countryName);
-                setSuppliersAddress(response.data.supplierDetails.supplierAddress);
-                setSuppliersTin(response.data.supplierDetails.supplierTin);
-                setSuppliersType(response.data.supplierDetails.supplierType);
-            })
-            .catch((error) => {
-                console.error('Error fetching data:', error);
-            });
+            axios.get(`http://localhost:8080/bmitvat/api/purchase/local_purchase_invoice/${params.id}`, { headers })
+                .then((response) => {
+                    setRawMaterialsRecords(response.data.purchaseItems);
+                    setChalanDate(response.data.supplierDetails.chalanDate);
+                    setSuppliersName(response.data.supplierDetails.supplierName);
+                    setSuppliersEmail(response.data.supplierDetails.supplierEmail);
+                    setSuppliersPhone(response.data.supplierDetails.supplierPhone);
+                    setSuppliersCountry(response.data.supplierDetails.countryName);
+                    setSuppliersAddress(response.data.supplierDetails.supplierAddress);
+                    setSuppliersTin(response.data.supplierDetails.supplierTin);
+                    setSuppliersType(response.data.supplierDetails.supplierType);
+                })
+                .catch((error) => {
+                    console.error('Error fetching data:', error);
+                });
         }
     }, []);
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Export Table'));
+        dispatch(setPageTitle('Foreign Purchse Invoice'));
     });
 
     interface suppliers {
@@ -47,9 +47,9 @@ const LocalPurchaseInvoice = () => {
         supplierCountry: string;
         supplierAddress: string;
         supplierTin: string;
-      }
-      
-      interface RecordWithIndex {
+    }
+
+    interface RecordWithIndex {
         [key: string]: any; // Define the type for each property in the record
         index: number; // Add index property
         serial: string;
@@ -90,7 +90,7 @@ const LocalPurchaseInvoice = () => {
     //For Index Number
     const recordsDataWithIndex: RecordWithIndex[] = recordsData.map((record: RecordWithIndex, index: number) => ({
         ...record,
-        index: index + 1 
+        index: index + 1
     }));
 
 
@@ -140,19 +140,19 @@ const LocalPurchaseInvoice = () => {
                                     <div>
                                         <div className='flex sm:flex-row flex-col pb-3'>
                                             <label htmlFor="cuPhone" className="mb-0 sm:w-1/4 sm:ltr:mr-2 rtl:ml-2 font-bold text-sm">Supplier Name:</label>
-                                            <p className="flex-1 text-sm font-medium">{supplierName}</p>
+                                            <p className="flex-1 text-sm font-medium"> {supplierName} </p>
                                         </div>
                                         <div className='flex sm:flex-row flex-col pb-3'>
                                             <label htmlFor="cuPhone" className="mb-0 sm:w-1/4 sm:ltr:mr-2 rtl:ml-2 font-bold text-sm">Supplier Phone:</label>
-                                            <p className="flex-1 text-sm font-medium">{supplierPhone} </p>
+                                            <p className="flex-1 text-sm font-medium"> {supplierPhone} </p>
                                         </div>
                                         <div className='flex sm:flex-row flex-col pb-3'>
                                             <label htmlFor="cuPhone" className="mb-0 sm:w-1/4 sm:ltr:mr-2 rtl:ml-2 font-bold text-sm">Supplier Email:</label>
-                                            <p className="flex-1 text-sm font-medium">{supplierEmail} </p>
+                                            <p className="flex-1 text-sm font-medium"> {supplierEmail} </p>
                                         </div>
                                         <div className='flex sm:flex-row flex-col pb-3'>
                                             <label htmlFor="cuPhone" className="mb-0 sm:w-1/4 sm:ltr:mr-2 rtl:ml-2 font-bold text-sm">Supplier Address:</label>
-                                            <p className="flex-1 text-sm font-medium"> {supplierAddress}</p>
+                                            <p className="flex-1 text-sm font-medium"> {supplierAddress} </p>
                                         </div>
                                     </div>
                                     <div>
@@ -195,9 +195,9 @@ const LocalPurchaseInvoice = () => {
                             { accessor: 'qty', title: 'Quantity', sortable: true },
                             { accessor: 'rate', title: 'Rate', sortable: true },
                             { accessor: 'amount', title: 'Value', sortable: true },
-                            { accessor: 'sdAmount', title: 'Sd Amount', sortable: true },
+                            { accessor: 'sdAmount', title: 'SD Amount', sortable: true },
                             { accessor: 'vatableValue', title: 'Vatable Amount', sortable: true },
-                            { accessor: 'taxAmount', title: 'Vat Amount', sortable: true },
+                            { accessor: 'taxAmount', title: 'VAT Amount', sortable: true },
                             { accessor: 'tamount', title: 'Total Amount', sortable: true },
                         ]}
                         totalRecords={initialRecords.length}
@@ -218,4 +218,4 @@ const LocalPurchaseInvoice = () => {
     );
 };
 
-export default LocalPurchaseInvoice;
+export default ServicePurchaseInvoice;

@@ -23,42 +23,42 @@ const personAdd = () => {
     const navigate = useNavigate();
     const user = useContext(UserContex);
     const baseUrl = user.base_url;
-  
+
     useEffect(() => {
-      handleSubmit;
-  }, []);
-  
+        handleSubmit;
+    }, []);
+
     const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-      const authorised_person = {
+    const authorised_person = {
         authorised_person_name: personName,
         authorised_person_description: personDescription,
         authorised_person_phone: personPhone,
         authorised_person_email_address: personEmail,
         authorised_person_nid_number: personNid,
         authorised_person_signature: personSignature,
-        user_id : 1, 
-      }
+            user_id: 1,
+        }
 
-  
-      if(user.token){
-        const headers= { Authorization: `Bearer ${user.token}` }
-  
-      try {
-         axios.post(`${baseUrl}/authorised_person/add-person`, authorised_person, {headers})
-          .then(function (response) {
-            if(response){
-              navigate("/pages/settings/authorised_person/index");
-            }else{
-              navigate("/pages/settings/authorised_person/add");
+
+        if (user.token) {
+            const headers = { Authorization: `Bearer ${user.token}` }
+
+            try {
+                axios.post(`${baseUrl}/authorised_person/add-person`, authorised_person, { headers })
+                    .then(function (response) {
+                        if (response) {
+                            navigate("/pages/settings/authorised_person/index");
+                        } else {
+                            navigate("/pages/settings/authorised_person/add");
+                        }
+                    })
+            } catch (err) {
+                console.log(err);
             }
-          })
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  
+        }
+
     };
 
 

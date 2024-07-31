@@ -231,7 +231,7 @@ const AddTreasuryChallan = () => {
                                     <IconFile className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
                                     Submit
                                 </button>
-                                <Link to="/pages/reports/treasuryChallan/index"><button type="button" className="btn btn-danger gap-2" >
+                                <Link to="/pages/reports/treasury_challan/index"><button type="button" className="btn btn-danger gap-2" >
                                     <IconTrashLines className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
                                     Cancel
                                 </button></Link>

@@ -24,6 +24,7 @@ const ImportPurchaseAdd = lazy(() => import('../pages/Production/Procurement/Imp
 const ImportPurchaseInvoice = lazy(() => import('../pages/Invoice/ImportServicePurchaseInvoice'));
 const ServicePurchase = lazy(() => import('../pages/Production/Procurement/ServicePurchase/index'));
 const ServicePurchaseAdd = lazy(() => import('../pages/Production/Procurement/ServicePurchase/components/addServicePurchase'));
+const ServicePurchaseInvoice = lazy(() => import('../pages/Invoice/ServicePurchaseInvoice'));
 const DebitNote = lazy(() => import('../pages/Production/Procurement/DebitNote/index'));
 const DebitNoteAdd = lazy(() => import('../pages/Production/Procurement/DebitNote/components/AddDebitNote'));
 const IssueVds = lazy(() => import('../pages/Production/Procurement/IssueVDS/index'));
@@ -49,14 +50,15 @@ const Mushak610Intex = lazy(() => import('../pages/Reports/Generate_Mushak/Musha
 const Mushak610 = lazy(() => import('../pages/Reports/Generate_Mushak/Mushak610/mushak610'));
 const Mushak91Intex = lazy(() => import('../pages/Reports/Generate_Mushak/Mushak91/index'));
 const Mushak91 = lazy(() => import('../pages/Reports/Generate_Mushak/Mushak91/mushak91'));
-const TreasuryChallan = lazy(() => import('../pages/Reports/Treasury_Challan/index'));
-const AddTreasuryChallan = lazy(() => import('../pages/Reports/Treasury_Challan/components/AddTreasuryChallan'));
+const TreasuryChallan = lazy(() => import('../pages/Reports/TreauryChallan/index'));
+const AddTreasuryChallan = lazy(() => import('../pages/Reports/TreauryChallan/components/AddTreasuryChallan'));
 const Payble91 = lazy(() => import('../pages/Reports/Payble91/index'));
 const AddPayble91 = lazy(() => import('../pages/Reports/Payble91/components/AddPayble91'));
 const PaybleVoucher = lazy(() => import('../pages/Reports/PaybleVoucher/index'));
 const AddPaybleVoucher = lazy(() => import('../pages/Reports/PaybleVoucher/components/AddPaybleVoucher'));
 const ReceviableVoucher = lazy(() => import('../pages/Reports/ReceivableVoucher/index'));
 const AddReceviableVoucher = lazy(() => import('../pages/Reports/ReceivableVoucher/components/AddReceivableVoucher'));
+
 
 
 const RawMatOpeningStock = lazy(() => import('../pages/Inventory/OpeningStock/RawMaterials'));
@@ -300,6 +302,10 @@ const routes = [
     {
         path: '/pages/procurment/service_purchase/add',
         element: <ServicePurchaseAdd />,
+    },
+    {
+        path: '/pages/invoice/service_purchase/:id',
+        element: <ServicePurchaseInvoice />,
     },
     {
         path: '/pages/procurment/import_purchase/index',
@@ -583,8 +589,6 @@ const routes = [
         path: '/pages/reports/receivable_voucher/add',
         element: <AddReceviableVoucher />,
     },
-
-
 
 
     //Company Settings

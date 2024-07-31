@@ -31,7 +31,7 @@ const index = () => {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Export Table'));
+        dispatch(setPageTitle('Treasury Challan Table'));
     });
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
@@ -79,7 +79,7 @@ const index = () => {
             <div className="panel flex items-center justify-between flex-wrap gap-4 text-black">
                 <h2 className="text-xl font-bold">Treasury Challan</h2>
                 <div className="flex items-center flex-wrap gap-3">
-                    <Link to="/pages/reports/treasuryChallan/add" className="btn btn-primary gap-1">
+                    <Link to="/pages/reports/treasury_challan/add" className="btn btn-primary gap-1">
                         <IconPlus />
                         Add New
                     </Link>
@@ -87,7 +87,7 @@ const index = () => {
             </div>
 
             <div className="pt-5">
-                {/*----------------- User list start ---------------*/}
+                {/*----------------- Treasury Challan list start ---------------*/}
                 <div className="panel col-span-3 " id="stack_form">
                     <div className="flex md:items-center justify-between md:flex-row flex-col mb-4.5 gap-5">
                         <div className="flex items-center justify-between mb-6">
@@ -121,7 +121,7 @@ const index = () => {
                         />
                     </div>
                 </div>
-                {/*-------------- User list end -------------*/}
+                {/*-------------- Treasury Challan list end -------------*/}
 
             </div>
         </div>
