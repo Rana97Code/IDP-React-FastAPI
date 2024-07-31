@@ -53,7 +53,7 @@ const index = () => {
         [key: string]: any; // Define the type for each property in the record
         index: number; // Add index property
         passport_no: string;
-        nid: string;
+        nid_no: string;
         customer_name: string;
         customer_email: string;
         customer_phone: string;
@@ -82,7 +82,7 @@ const index = () => {
                 return (
                     item.serial.toString().includes(search.toLowerCase()) ||
                     item.passport_no.toLowerCase().includes(search.toLowerCase()) ||
-                    item.nid.toLowerCase().includes(search.toLowerCase()) ||
+                    item.nid_no.toLowerCase().includes(search.toLowerCase()) ||
                     item.customer_name.toLowerCase().includes(search.toLowerCase()) ||
                     item.customer_email.toLowerCase().includes(search.toLowerCase()) ||
                     item.customer_phone.toLowerCase().includes(search.toLowerCase()) ||
@@ -231,7 +231,7 @@ const index = () => {
                         columns={[
                             { accessor: 'index', title: 'Serial', sortable: true },
                             { accessor: 'passport_no', title: 'Passport No', sortable: true },
-                            { accessor: 'nid', title: 'NID', sortable: true },
+                            { accessor: 'nid_no', title: 'NID', sortable: true },
                             { accessor: 'customer_name', title: 'Customer Name', sortable: true },
                             { accessor: 'customer_email', title: 'Customer Email', sortable: true },
                             { accessor: 'customer_phone', title: 'Customer Phone', sortable: true },

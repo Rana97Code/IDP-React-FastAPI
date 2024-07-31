@@ -13,18 +13,22 @@ const EditSuppliers = lazy(() => import('../pages/Relationship/Suppliers/EditSup
 const Items = lazy(() => import('../pages/Inventory/Items/index'));
 const ItemsAdd = lazy(() => import('../pages/Inventory/Items/AddItems'));
 const ItemsEdit = lazy(() => import('../pages/Inventory/Items/EditItems'));
-const ServicePurchase = lazy(() => import('../pages/Purchase/ServicePurchase/index'));
-const AddServicePurchase = lazy(() => import('../pages/Purchase/ServicePurchase/components/AddServicePurchase'));
-const LocalPurchase = lazy(() => import('../pages/Purchase/LocalPurchase/index'));
-const AddLocalPurchase = lazy(() => import('../pages/Purchase/LocalPurchase/components/AddLocalPurchase'));
-const ForeignPurchase = lazy(() => import('../pages/Purchase/ForeignPurchase/index'));
-const AddForeignPurchase = lazy(() => import('../pages/Purchase/ForeignPurchase/components/AddForeignPurchase'));
-const ImportPurchase = lazy(() => import('../pages/Purchase/ImportServicePurchase/index'));
-const AddImportPurchase = lazy(() => import('../pages/Purchase/ImportServicePurchase/components/AddImportPurchase'));
-const DebitNote = lazy(() => import('../pages/Purchase/DebitNote/index'));
-const AddDebitNote = lazy(() => import('../pages/Purchase/DebitNote/components/AddDebitNote'));
-const IssueVds = lazy(() => import('../pages/Purchase/IssueVds/index'));
-const AddIssueVds = lazy(() => import('../pages/Purchase/IssueVds/components/AddIssueVds'));
+
+
+const ServicePurchase = lazy(() => import('../pages/Production/Procurement/ServicePurchase/index'));
+const ServicePurchaseAdd = lazy(() => import('../pages/Production/Procurement/ServicePurchase/components/addServicePurchase'));
+const ImportPurchase = lazy(() => import('../pages/Production/Procurement/ImportServicePurchase/index'));
+const ImportPurchaseAdd = lazy(() => import('../pages/Production/Procurement/ImportServicePurchase/components/AddImportPurchase'));
+
+
+const LocalPurchase = lazy(() => import('../pages/Production/Procurement/LocalPurchase/index'));
+const LocalPurchaseAdd = lazy(() => import('../pages/Production/Procurement/LocalPurchase/components/addLocalPurchase'));
+const ForeignPurchase = lazy(() => import('../pages/Production/Procurement/ForeigenPurchase/index'));
+const ForeignPurchaseAdd = lazy(() => import('../pages/Production/Procurement/ForeigenPurchase/components/addForeignPurchase'));
+const DebitNote = lazy(() => import('../pages/Production/Procurement/DebitNote/index'));
+const AddDebitNote = lazy(() => import('../pages/Production/Procurement/DebitNote/components/AddDebitNote'));
+const IssueVds = lazy(() => import('../pages/Production/Procurement/IssueVDS/index'));
+const IssueVdsAdd = lazy(() => import('../pages/Production/Procurement/IssueVDS/components/AddIssueVds'));
 const UploadExcel = lazy(() => import('../pages/Sales/UploadExcel/index'));
 const ServiceSales = lazy(() => import('../pages/Sales/ServiceSales/index'));
 const AddServiceSales = lazy(() => import('../pages/Sales/ServiceSales/components/AddServiceSales'));
@@ -44,12 +48,16 @@ const Mushak610Intex = lazy(() => import('../pages/Reports/Generate_Mushak/Musha
 const Mushak610 = lazy(() => import('../pages/Reports/Generate_Mushak/Mushak610/mushak610'));
 const Mushak91Intex = lazy(() => import('../pages/Reports/Generate_Mushak/Mushak91/index'));
 const Mushak91 = lazy(() => import('../pages/Reports/Generate_Mushak/Mushak91/mushak91'));
-
-
-
-
-
-
+const TreasuryChallan = lazy(() => import('../pages/Reports/Treasury_Challan/index'));
+const AddTreasuryChallan = lazy(() => import('../pages/Reports/Treasury_Challan/components/AddTreasuryChallan'));
+const Payble91 = lazy(() => import('../pages/Reports/Payble91/index'));
+const AddPayble91 = lazy(() => import('../pages/Reports/Payble91/components/AddPayble91'));
+const PaybleVoucher = lazy(() => import('../pages/Reports/PaybleVoucher/index'));
+const AddPaybleVoucher = lazy(() => import('../pages/Reports/PaybleVoucher/components/AddPaybleVoucher'));
+const ReceviableVoucher = lazy(() => import('../pages/Reports/ReceivableVoucher/index'));
+const AddReceviableVoucher = lazy(() => import('../pages/Reports/ReceivableVoucher/components/AddReceivableVoucher'));
+const Currency = lazy(() => import('../pages/GeneralSettings/Currency/index'));
+const EditCurrency = lazy(() => import('../pages/GeneralSettings/Currency/components/EditCurrency'));
 
 
 
@@ -69,7 +77,7 @@ const User  = lazy(() => import('../pages/GeneralSettings/User/index'));
 const UserEdit  = lazy(() => import('../pages/GeneralSettings/User/components/userEdit'));
 const UserAdd  = lazy(() => import('../pages/GeneralSettings/User/components/userAdd'));
 const UserRolePermission  = lazy(() => import('../pages/GeneralSettings/User/userRolePermission'));
-const UserRole  = lazy(() => import('../pages/GeneralSettings/User/role'));
+const UserRole  = lazy(() => import('../pages/GeneralSettings/User/userRole'));
 const UserPermission  = lazy(() => import('../pages/GeneralSettings/User/userPermission'));
 const UserView  = lazy(() => import('../pages/GeneralSettings/User/components/userView'));
 const Unit = lazy(() => import('../pages/GeneralSettings/Unit/index'));
@@ -85,10 +93,7 @@ const CpcCode = lazy(() => import('../pages/GeneralSettings/CpcCode/index'));
 const CpcAdd = lazy(() => import('../pages/GeneralSettings/CpcCode/components/cpcAdd'));
 const CpcEdit = lazy(() => import('../pages/GeneralSettings/CpcCode/components/cpcEdit'));
 
-const LocalPurchaseAdd = lazy(() => import('../pages/Production/Procurement/LocalPurchase/components/addLocalPurchase'));
 const LocalPurchaseInvoice = lazy(() => import('../pages/Invoice/LocalPurchaseInvoice'));
-
-const ForeignPurchaseAdd = lazy(() => import('../pages/Production/Procurement/ForeigenPurchase/components/addForeignPurchase'));
 
 const DebitNoteAdd = lazy(() => import('../pages/Production/Procurement/DebitNote/components/AddDebitNote'));
 
@@ -222,52 +227,12 @@ const routes = [
         element: <ItemsEdit />,
     },
     {
-        path: '/pages/purchase/service_purchase/index',
-        element: <ServicePurchase />,
-    },
-    {
-        path: '/pages/purchase/service_purchase/add',
-        element: <AddServicePurchase />,
-    },
-    {
-        path: '/pages/purchase/local_purchase/index',
-        element: <LocalPurchase />,
-    },
-    {
-        path: '/pages/purchase/local_purchase/add',
-        element: <AddLocalPurchase />,
-    },
-    {
-        path: '/pages/purchase/foreign_purchase/index',
-        element: <ForeignPurchase />,
-    },
-    {
-        path: '/pages/purchase/foreign_purchase/add',
-        element: <AddForeignPurchase />,
-    },
-    {
-        path: '/pages/purchase/import_purchase/index',
-        element: <ImportPurchase />,
-    },
-    {
-        path: '/pages/purchase/import_purchase/add',
-        element: <AddImportPurchase />,
-    },
-    {
         path: '/pages/purchase/debit_note/index',
         element: <DebitNote />,
     },
     {
         path: '/pages/purchase/debit_note/add',
         element: <AddDebitNote />,
-    },
-    {
-        path: '/pages/purchase/issue_vds/index',
-        element: <IssueVds />,
-    },
-    {
-        path: '/pages/purchase/issue_vds/add',
-        element: <AddIssueVds />,
     },
     {
         path: '/pages/sales/excel_sales/index',
@@ -314,10 +279,6 @@ const routes = [
 
 
 
-
-
-
-
     {
         path: '/pages/inventory/opening/rawmaterials',
         element: <RawMatOpeningStock />,
@@ -347,6 +308,22 @@ const routes = [
         element: <ForeignPurchaseAdd />,
     },
     {
+        path: '/pages/procurment/service_purchase/index',
+        element: <ServicePurchase />,
+    },
+    {
+        path: '/pages/procurment/service_purchase/add',
+        element: <ServicePurchaseAdd />,
+    },
+    {
+        path: '/pages/procurment/import_purchase/index',
+        element: <ImportPurchase />,
+    },
+    {
+        path: '/pages/procurment/import_purchase/add',
+        element: <ImportPurchaseAdd />,
+    },
+    {
         path: '/pages/procurment/debitNote/index',
         element: <DebitNote />,
     },
@@ -354,14 +331,14 @@ const routes = [
         path: '/pages/procurment/debitNote/add',
         element: <DebitNoteAdd />,
     },
-    // {
-    //     path: '/pages/procurment/issueVds/index',
-    //     element: <IssueVds />,
-    // },
-    // {
-    //     path: '/pages/procurment/issueVds/add',
-    //     element: <IssueVdsAdd />,
-    // },
+    {
+        path: '/pages/procurment/issueVds/index',
+        element: <IssueVds />,
+    },
+    {
+        path: '/pages/procurment/issueVds/add',
+        element: <IssueVdsAdd />,
+    },
 
     {
         path: '/pages/production_bom/index',
@@ -416,7 +393,7 @@ const routes = [
 
     // Reports
     {
-        path: '/pages/reports/generateMushak/index',
+        path: '/pages/reports/generate_mushak/index',
         element: <GenerateMushak />,
     },
     {
@@ -603,6 +580,40 @@ const routes = [
         path: '/pages/report/mushak91/subform/note_64',
         element: <Mushak91Note64 />,
     },
+    {
+        path: '/pages/reports/treasury_challan/index',
+        element: <TreasuryChallan />,
+    },
+    {
+        path: '/pages/reports/treasury_challan/add',
+        element: <AddTreasuryChallan />,
+    },
+    {
+        path: '/pages/reports/payble91/index',
+        element: <Payble91 />,
+    },
+    {
+        path: '/pages/reports/payble91/add',
+        element: <AddPayble91 />,
+    },
+    {
+        path: '/pages/reports/payble_voucher/index',
+        element: <PaybleVoucher />,
+    },
+    {
+        path: '/pages/reports/payble_voucher/add',
+        element: <AddPaybleVoucher />,
+    },
+    {
+        path: '/pages/reports/receivable_voucher/index',
+        element: <ReceviableVoucher />,
+    },
+    {
+        path: '/pages/reports/receivable_voucher/add',
+        element: <AddReceviableVoucher />,
+    },
+
+
 
 
     //Company Settings
@@ -653,6 +664,15 @@ const routes = [
     {
         path: '/pages/settings/custom_house/edit/:id',
         element: <CustomHouseEdit />,
+    },
+
+    {
+        path: '/pages/settings/currency/index',
+        element: <Currency />,
+    },
+    {
+        path: '/pages/settings/currency/edit/:id',
+        element: <EditCurrency />,
     },
 
     {

@@ -28,7 +28,7 @@ const addItem = () => {
   const [allUnits, setGetAllUnits] = useState<units[]>([]);
   const [allHscode, setGetAllHscode] = useState<Hscode[]>([]);
   const [item_name, setName] = useState("");
-  const [dexcription_code, setDescriptionCode] = useState("");
+  const [description_code, setDescriptionCode] = useState("");
   const [unitId, setUnit] = useState("");
   const [hsCodeId, setHscodeId] = useState("");
   const [itemType, setType] = useState("");
@@ -86,7 +86,7 @@ const addItem = () => {
 
     const items = {
       item_name: item_name,
-      dexcription_code: dexcription_code,
+      description_code: description_code,
       item_type: itemType,
       hs_code: hs_code,
       hs_code_id: hs_code_id,
@@ -130,8 +130,7 @@ const addItem = () => {
             <h3 className="font-semibold text-lg dark:text-white-light">Add New Item</h3>
           </div>
           <div className="mb-5">
-            {/*
-            <form className="space-y-5" onSubmit={handleSubmit}> */}
+
             <form className="space-y-5" onSubmit={handleSubmit} >
               <div className="grid  gap-4">
                 <div className="grid grid-cols-5 gap--x-2 gap-y-3">

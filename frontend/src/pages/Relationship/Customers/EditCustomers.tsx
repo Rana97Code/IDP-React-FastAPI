@@ -41,8 +41,8 @@ const editCustomers = () => {
           console.log(data);
           setName(data.customer_name)
           setEmail(data.customer_email)
-          setPassport(data.customer_passport)
-          setNID(data.customer_nid)
+          setPassport(data.passport_no)
+          setNID(data.nid_no)
           setPhone(data.customer_phone)
           setType(data.customer_type)
           setCountry(data.country_id)
@@ -89,8 +89,8 @@ const editCustomers = () => {
     const customer = {
       customer_name: name,
       customer_email: email,
-      customer_passport: passport,
-      customer_nid: nid,
+      passport_no: passport,
+      nid_no: nid,
       customerPhone: phone,
       customer_phone: address,
       customer_type: type,

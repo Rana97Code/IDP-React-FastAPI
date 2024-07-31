@@ -1,7 +1,7 @@
-back/env
-back/venv
-back/__pycache__
-back/app/__pycache__
+backend/env
+backend/venv
+backend/__pycache__
+backend/app/__pycache__
 .idea
  __pycache__/
  *.pyc

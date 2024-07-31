@@ -60,8 +60,8 @@ const addCustomers = () => {
     const customer = {
       customer_name: name,
       customer_email: email,
-      customer_passport: passport,
-      customer_nid: nid,
+      passport_no: passport,
+      nid_no: nid,
       customer_phone: phone,
       customer_type: type,
       country_id: country,

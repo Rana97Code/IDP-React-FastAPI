@@ -27,7 +27,7 @@ const index = () => {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Export Table'));
+        dispatch(setPageTitle('Service Purchase Table'));
     });
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
@@ -98,7 +98,7 @@ const index = () => {
             <div className="panel flex items-center justify-between flex-wrap gap-4 text-black">
                 <h2 className="text-xl font-bold">Production Service Purchase</h2>
                 <div className="flex items-center flex-wrap gap-3">
-                    <Link to="/pages/production/service_purchase/add" className="btn btn-primary gap-1">
+                    <Link to="/pages/procurment/service_purchase/add" className="btn btn-primary gap-1">
                         <IconPlus />
                         Add New
                     </Link>

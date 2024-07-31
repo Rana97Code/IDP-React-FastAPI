@@ -89,7 +89,7 @@ const index = () => {
         description_code: string;
         hs_code: string;
         description: string;
-        fiscal_year: string;
+        calculate_year: string;
         item_type: number;
         unit_name: string;
     }
@@ -119,7 +119,7 @@ const index = () => {
                     item.description_code.toLowerCase().includes(search.toLowerCase()) ||
                     item.hs_code.toLowerCase().includes(search.toLowerCase()) ||
                     item.description.toLowerCase().includes(search.toLowerCase()) ||
-                    item.fiscal_year.toLowerCase().includes(search.toLowerCase()) ||
+                    item.calculate_year.toLowerCase().includes(search.toLowerCase()) ||
                     item.item_type.toLowerCase().includes(search.toLowerCase()) ||
                     item.unit_name.toLowerCase().includes(search.toLowerCase()) ||
                     item.status.tooltip.toLowerCase().includes(search.toLowerCase()) ||
@@ -482,11 +482,10 @@ const index = () => {
                         columns={[
                             { accessor: 'index', title: 'Serial', sortable: true },
                             { accessor: 'item_name', title: 'Item Name', sortable: true, width: '300px', cellsStyle: { overflow: 'hidden' } },
-                            { accessor: 'description_code', title: 'Description Code', sortable: true, width: '300px', cellsStyle: { overflow: 'hidden' } },
-                            
+                            { accessor: 'description_code', title: 'Description Code', sortable: true, cellsStyle: { overflow: 'hidden' } },
                             { accessor: 'hs_code', title: 'HS-CODE', sortable: true },
                             { accessor: 'description', title: 'Description', sortable: true, width: '300px', cellsStyle: { overflow: 'hidden' } },
-                            { accessor: 'fiscal_year', title: 'Fiscal Year', sortable: true },
+                            { accessor: 'calculate_year', title: 'Fiscal Year', sortable: true },
                             {
                                 accessor: 'item_type', title: 'Item Type', sortable: true, render: ({ item_type }) => <span className={`p-2 badge ${item_type == 1 ? 'badge-outline-success' : 'badge-outline-primary'} `}>{item_type == 1 ? 'Raw Materials' : 'Finish Goods'}</span>,
                             },

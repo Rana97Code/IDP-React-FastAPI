@@ -9,6 +9,7 @@ import UserContex from '../../../context/UserContex';
 const editItem = () => {
 
   const [itemName, setName] = useState("");
+  const [descriptionCode, setDesCode] = useState("");
   const [unitId, setUnit] = useState("");
   const [hsCodeId, setHscodeId] = useState("");
   const [hsCode, setHscode] = useState("");
@@ -47,6 +48,7 @@ const editItem = () => {
           // setInitialRecords(response.data);
           const data = response.data;
           setName(data.item_name)
+          setDesCode(data.description_code)
           setUnit(data.unit_id)
           setHscode(data.hs_code)
           setHscodeId(data.hs_code_id)
@@ -117,6 +119,7 @@ const editItem = () => {
 
     const item = {
       item_name: itemName,
+      description_code: descriptionCode,
       unit_id: unitId,
       hs_code: hsCode,
       hs_code_id: hsCodeId,
@@ -133,8 +136,7 @@ const editItem = () => {
       const headers = { Authorization: `Bearer ${user.token}` }
 
       try {
-        await axios.put(`${baseUrl}/item/update_item
-            /${params.id}`, item, { headers })
+        await axios.put(`${baseUrl}/item/update_item/${params.id}`, item, { headers })
           .then(function (response) {
             navigate("/pages/inventory/items");
           })
@@ -161,6 +163,12 @@ const editItem = () => {
                 <div className="grid grid-cols-5 gap--x-2 gap-y-3">
                   <label htmlFor="inputPerson" className='col-span-1 text-base'>Item Name</label>
                   <input id="unitName" type="text" className="form-input py-2.5 text-base col-span-4" value={itemName} onChange={(e) => setName(e.target.value)} required />
+                </div>
+              </div>
+              <div className="grid  gap-4">
+                <div className="grid grid-cols-5 gap--x-2 gap-y-3">
+                  <label htmlFor="inputPerson" className='col-span-1 text-base'>Description Code</label>
+                  <input id="description" type="text" className="form-input py-2.5 text-base col-span-4" value={descriptionCode} onChange={(e) => setDesCode(e.target.value)} required />
                 </div>
               </div>
               <div>
@@ -214,10 +222,11 @@ const editItem = () => {
                   <IconFile className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
                   Submit
                 </button>
-                <Link to="/pages/inventory/items"><button type="button" className="btn btn-danger gap-2" >
-                  <IconTrashLines className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
-                  Cancel
-                </button></Link>
+                <Link to="/pages/inventory/items">
+                  <button type="button" className="btn btn-danger gap-2" >
+                    <IconTrashLines className="w-5 h-5 ltr:mr-2 rtl:ml-2" /> Cancel
+                  </button>
+                </Link>
               </div>
             </form>
           </div>

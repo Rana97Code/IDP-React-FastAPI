@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useState, Fragment, useEffect } from 'react';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import sortBy from 'lodash/sortBy';
@@ -27,7 +27,7 @@ const index = () => {
 
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(setPageTitle('Export Table'));
+        dispatch(setPageTitle('Foreign Purchase Table'));
     });
     const [page, setPage] = useState(1);
     const PAGE_SIZES = [10, 20, 30, 50, 100];
@@ -122,7 +122,18 @@ const index = () => {
                             records={recordsData}
                             columns={[
                                 { accessor: 'serial', title: 'Serial', sortable: true },
-                                { accessor: 'invoiceNo', title: 'Invoice No', sortable: true },
+                                {
+                                    accessor: 'pinvoiceNo',
+                                    title: 'Invoice No',
+                                    sortable: true,
+                                    render: ({ id, pinvoiceNo }) => (
+                                        <div >
+                                            <NavLink to={"/pages/invoice/foreign_purchase/" + id} className="text-cyan-500" >
+                                                {pinvoiceNo}
+                                            </NavLink>
+                                        </div>
+                                    ),
+                                },
                                 { accessor: 'supplier', title: 'Supplier', sortable: true },
                                 { accessor: 'lcNo', title: 'LC No', sortable: true },
                             ]}
