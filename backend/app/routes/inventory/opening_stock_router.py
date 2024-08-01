@@ -18,14 +18,14 @@ from app.models.inventory.item_model import Item, ItemBase
 
 
 # route define
-FinishGoods_router = APIRouter()
+Opening_stock_router = APIRouter()
 #For Raw_Materials::
-@FinishGoods_router.get("/bmitvat/api/item/all_raw_materials", response_model=List[ItemBase], dependencies=[Depends(get_current_active_user)])
+@Opening_stock_router.get("/bmitvat/api/item/all_raw_materials", response_model=List[ItemBase], dependencies=[Depends(get_current_active_user)])
 async def index(db: Session = Depends(get_db)):  
     return db.query(Item).filter(Item.item_type == 1, Item.stock_status == 0).all()
 
 
-@FinishGoods_router.get("/bmitvat/api/opening_stock/all_raw_stock", response_model=List[OpeningStockSchema], dependencies=[Depends(get_current_active_user)])
+@Opening_stock_router.get("/bmitvat/api/opening_stock/all_raw_stock", response_model=List[OpeningStockSchema], dependencies=[Depends(get_current_active_user)])
 async def index(db: Session = Depends(get_db)):
     tt = db.query(OpeningStock, Item).join(Item, OpeningStock.item_id == Item.id).filter(OpeningStock.item_type == 1)\
         .add_columns(OpeningStock.id, OpeningStock.item_id, OpeningStock.item_type, Item.item_name, Item.hs_code, OpeningStock.opening_date, 
@@ -52,11 +52,11 @@ async def index(db: Session = Depends(get_db)):
 
 
 #for Finishing_Goods::
-@FinishGoods_router.get("/bmitvat/api/item/all_finish_goods", response_model=List[ItemBase], dependencies=[Depends(get_current_active_user)])
+@Opening_stock_router.get("/bmitvat/api/item/all_finish_goods", response_model=List[ItemBase], dependencies=[Depends(get_current_active_user)])
 async def index(db: Session = Depends(get_db)):  
     return db.query(Item).filter(Item.item_type == 2, Item.status == 1).all()
 
-@FinishGoods_router.post("/bmitvat/api/opening_stock/add-opening-stock", dependencies=[Depends(get_current_active_user)])
+@Opening_stock_router.post("/bmitvat/api/opening_stock/add-opening-stock", dependencies=[Depends(get_current_active_user)])
 async def create(openingStock:OpeningInsertSchema, db:Session=Depends(get_db)):
     print(openingStock)
     srv= OpeningStock( item_id=openingStock.item_id, item_type=openingStock.item_type, opening_date=openingStock.opening_date, 
@@ -78,7 +78,7 @@ async def create(openingStock:OpeningInsertSchema, db:Session=Depends(get_db)):
     
 
 
-@FinishGoods_router.get("/bmitvat/api/opening_stock/all_finish_stock", response_model=List[OpeningStockSchema], dependencies=[Depends(get_current_active_user)])
+@Opening_stock_router.get("/bmitvat/api/opening_stock/all_finish_stock", response_model=List[OpeningStockSchema], dependencies=[Depends(get_current_active_user)])
 async def index(db: Session = Depends(get_db)):
     pp = db.query(OpeningStock, Item).join(Item, OpeningStock.item_id == Item.id)\
         .add_columns(OpeningStock.id, OpeningStock.item_id, OpeningStock.item_type, Item.item_name, Item.hs_code, OpeningStock.opening_date, 

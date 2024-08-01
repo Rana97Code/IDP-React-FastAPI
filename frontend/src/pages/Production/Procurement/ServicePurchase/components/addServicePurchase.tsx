@@ -57,8 +57,6 @@ const addServicePurchase = () => {
     const [chalanDate, setChalanDate] = useState(getTodayDate());
     const [fiscalYear, setFiscalYear] = useState("");
 
-    const [note, setNote] = useState('');
-
 
 
     useEffect(() => {
@@ -715,11 +713,13 @@ const addServicePurchase = () => {
         const TotalVat = document.getElementById('vatTotal') as HTMLInputElement;
         const TotalSD = document.getElementById('sdTotal') as HTMLInputElement;
         const AllTotal = document.getElementById('grandTotal') as HTMLInputElement;
+        const notes = document.getElementById('notes') as HTMLInputElement;
 
-        if (TotalVat || TotalSD || AllTotal) {
+        if (TotalVat || TotalSD || AllTotal || notes) {
             const Vat = TotalVat.value;
             const SD = TotalSD.value;
             const ALL = AllTotal.value;
+            const note = notes.value;
 
 
             const purchase = {
@@ -734,7 +734,7 @@ const addServicePurchase = () => {
                 total_sd: SD,
                 grand_total: ALL,
                 notes: note,
-                // items: arrayData
+                items: arrayData
 
             }
 
@@ -749,7 +749,7 @@ const addServicePurchase = () => {
 
                     await axios.post(`${baseUrl}/service_purchase/add-service-purchase`, purchase, { headers })
                         .then(function (response) {
-                            navigate("/pages/procurment/local_purchase/index");
+                            navigate("/pages/procurment/service_purchase/index");
                         })
 
                 } catch (err) {
@@ -867,17 +867,17 @@ const addServicePurchase = () => {
 
                                     <div className="grid grid-cols-5 gap--x-2 gap-y-3">
                                         <label htmlFor="userName" className='col-span-1 text-sm'>Note</label>
-                                        <textarea id="userName" placeholder="Notes..." className="form-input py-2.5 text-sm col-span-4" name="user_name" />
+                                        <textarea id="notes" placeholder="Notes..." className="form-input py-2.5 text-sm col-span-4" name="user_name" />
                                     </div>
                                     <div className="flex items-center justify-center gap-6 pt-4">
                                         <button type="submit" className="btn btn-success gap-2" >
                                             <IconFile className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
                                             Submit
                                         </button>
-                                        <button type="button" className="btn btn-danger gap-2" >
-                                            <IconTrashLines className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
-                                            Cancel
-                                        </button>
+                                        <Link to="/pages/procurment/service_purchase/index"><button type="button" className="btn btn-danger gap-2" >
+                                        <IconTrashLines className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
+                                        Cancel
+                                    </button></Link>
                                     </div>
                                 </form>
                             </div>

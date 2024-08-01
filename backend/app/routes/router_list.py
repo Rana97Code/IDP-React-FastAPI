@@ -12,12 +12,11 @@ from app.routes.general_settings.custom_house_router import custom_house_router
 from app.routes.general_settings.authorised_person_router import authorised_person_router
 from app.routes.general_settings.company_settings_router import company_settings_router
 from app.routes.inventory.item_router import item_route
-from app.routes.inventory.FinishGoods_router import FinishGoods_router
+from app.routes.inventory.opening_stock_router import Opening_stock_router
 from app.routes.production.sales.localSales_router import sales_router
 from app.routes.production.sales.creditnote_router import Creditnote_router
 from app.routes.production.sales.receiveVds_router import ReceiveVds_router
 from app.routes.production.wastage.wastage_router import Wastage_router 
-from app.routes.inventorystock_router import InventoryStock_router
 from app.routes.production.procurement.service_purchase_router import Service_purchase_router  
 from app.routes.production.procurement.foreign_purchase_router import Purchase_router  
 from app.routes.general_settings.cpc_router import cpc_router  
@@ -42,12 +41,11 @@ router.include_router(custom_house_router)
 router.include_router(authorised_person_router)
 router.include_router(company_settings_router)
 router.include_router(item_route)
-router.include_router(FinishGoods_router)
+router.include_router(Opening_stock_router)
 router.include_router(sales_router)
 router.include_router(Creditnote_router)
 router.include_router(ReceiveVds_router)
 router.include_router(Wastage_router)
-router.include_router(InventoryStock_router)
 router.include_router(Purchase_router)
 router.include_router(Service_purchase_router)
 router.include_router(cpc_router)

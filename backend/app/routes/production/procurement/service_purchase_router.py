@@ -7,9 +7,10 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pathlib import *
 import os
+from sqlalchemy import desc
+from datetime import datetime
 from sqlalchemy.sql.sqltypes import Numeric
-from app.models.inventory.opening_stock_model import OpeningStock, OpeningInsertSchema , OpeningStockSchema
-from app.models.relationship.supplier_model import Supplier, supplierBase, SupplierSchema
+from app.models.inventory.InventoryStock_model import Stock, StockHistory
 from app.models.production.procurement.Purchase_model import Purchase,Purchase_item
 from app.schemas.production.procurement.ForeignPurchase_schema import ForeignPurchaseInsertSchema,ItemDetailsModel, PurchaseTableDetailsModel
 from app.schemas.production.procurement.ServicePurchase_schema import ServicePurchaseInsertSchema
@@ -21,9 +22,10 @@ Service_purchase_router = APIRouter()
 @Service_purchase_router.post("/bmitvat/api/service_purchase/add-service-purchase", dependencies=[Depends(get_current_active_user)])
 async def create_foreign_purchase(Spurchase: ServicePurchaseInsertSchema, db: Session = Depends(get_db)):
     try:
-        print(Spurchase)
-        srv = Purchase(
-            invoice_no='SER-20241206-0001',
+        last_purchase = db.query(Purchase).order_by(desc(Purchase.id)).first()
+        PurchaseInv = "SER-" + datetime.now().strftime('%Y%m%d') + '-' + f"{int(last_purchase.id) + 1:04d}"
+        srvp = Purchase(
+            invoice_no= PurchaseInv,
             vendor_inv=Spurchase.chalan_number,
             supplier_id=Spurchase.supplier_id,
             purchase_type=Spurchase.purchase_type,
@@ -37,30 +39,59 @@ async def create_foreign_purchase(Spurchase: ServicePurchaseInsertSchema, db: Se
             chalan_date=Spurchase.chalan_date,
             entry_date=Spurchase.entry_date
             )
-        db.add(srv)
+        db.add(srvp)
         db.flush()  # Get the srv.id before committing
-
         for item in Spurchase.items:
             purchase_item = Purchase_item(
                 item_id = item.item_id,
+                purchase_id = srvp.id,
                 hs_code = item.hs_code,
                 hs_code_id = item.hs_code_id,
-                purchase_id = srv.id,
                 qty = item.qty,
                 rate = item.rate,
                 access_amount = item.access_amount,
                 item_sd = item.item_sd,
                 sd_amount = item.sd_amount,
-                vat_rate = item.vat_rate,
-                vat_type = item.vat_type,
                 vatable_value = item.vatable_value,
+                vat_type = item.vat_type,
+                vat_rate = item.vat_rate,
+                vat_amount = item.vat_amount,
+                vds = item.vds,
                 rebate = item.rebate,
                 item_total = item.item_total,
-                purchase_date = srv.entry_date,
-                entry_date = srv.entry_date,
-                p_date = srv.entry_date
+                purchase_date = srvp.entry_date
                 )
             db.add(purchase_item)
+
+        #    Stock Manage 
+            item_stock = db.query(Stock).filter(Stock.item_id == item.item_id).order_by(desc(Stock.id)).first()
+            print(item_stock.id, item_stock.qty)
+
+            if item_stock:
+                # Update the existing stock entry
+                item_stock.qty += item.qty
+                item_stock.rate = item.rate
+            else:
+                # Insert a new stock entry
+                stock = Stock(
+                    item_id = item.item_id,
+                    qty = item.qty,
+                    rate = item.rate,
+                    status = 1
+                    )
+                db.add(stock)
+
+            stock_history = StockHistory(
+                item_id = item.item_id,
+                action_tbl= 'purchase',
+                action_tbl_id = srvp.id,
+                action_type='increment',
+                previous_stock = item_stock.qty,
+                qty = item.qty,
+                status = 1
+            )
+            db.add(stock_history)
+
         db.commit()
         return {"Message": "Successfully Added"}
 

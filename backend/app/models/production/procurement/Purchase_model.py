@@ -26,10 +26,10 @@ class Purchase(Base):
     fiscal_year=Column(Integer,nullable=True)
     notes=Column(String(255),nullable=True)
     user_id=Column(Integer,nullable=True)
-    lc_date = Column(Date, index=True,nullable=True)
-    entry_date = Column(Date, index=True)
-    chalan_date = Column(Date, index=True)
-    created_at = Column(DateTime, default=True, index=datetime.utcnow)
+    lc_date = Column(Date, nullable=True)
+    entry_date = Column(Date, index=True, nullable=False)
+    chalan_date = Column(Date, index=True, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
    
 
 class Purchase_item(Base):
@@ -58,8 +58,8 @@ class Purchase_item(Base):
     vds=Column(Integer,nullable=True)
     rebate=Column(Integer,nullable=True)
     item_total=Column(Float,nullable=True)
-    purchase_date = Column(Date, index=True)
-    created_at = Column(DateTime, default=True, index=datetime.utcnow)
+    purchase_date = Column(Date, index=True,nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
 
     
 Base.metadata.create_all(bind=engine)
