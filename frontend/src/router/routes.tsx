@@ -106,7 +106,8 @@ const ProductionWipInvoice =lazy(() => import('../pages/Invoice/ProductionWipInv
 const LocalSales = lazy(() => import('../pages/Production/Sales/LocalSales/index'));
 const LocalSalesAdd = lazy(() => import('../pages/Production/Sales/LocalSales/components/AddLocalSales'));
 
-const Mushak63 = lazy(() => import('../pages/Reports/Sales/Mushak-6.3'));
+const Mushak68 = lazy(() => import('../pages/Production/Procurement/DebitNote/components/Mushak68'));
+const Mushak66 = lazy(() => import('../pages/Production/Procurement/IssueVDS/components/Mushak66'));
 
 const Mushak91Note1 = lazy(() => import('../pages/Reports/Generate_Mushak/Mushak91/subForm/Note1'));
 const Mushak91Note2 = lazy(() => import('../pages/Reports/Generate_Mushak/Mushak91/subForm/Note2'));
@@ -688,8 +689,12 @@ const routes = [
         element: <PermissionEdit />,
     },
     {
-        path: '/pages/report/sales/Mushak63/:id',
-        element: <Mushak63 />,
+        path: '/pages/procurment/debitNote/Mushak68/:id',
+        element: <Mushak68 />,
+    },
+    {
+        path: '/pages/procurment/issueVds/Mushak66/:id',
+        element: <Mushak66 />,
     }
 ];
 export { routes };
