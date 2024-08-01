@@ -40,27 +40,27 @@ async def create_foreign_purchase(Spurchase: ServicePurchaseInsertSchema, db: Se
         db.add(srv)
         db.flush()  # Get the srv.id before committing
 
-        # for item in Spurchase.items:
-        #     purchase_item = Purchase_item(
-        #         item_id = item.item_id,
-        #         hs_code = item.hs_code,
-        #         hs_code_id = item.hs_code_id,
-        #         purchase_id = srv.id,
-        #         qty = item.qty,
-        #         rate = item.rate,
-        #         access_amount = item.access_amount,
-        #         item_sd = item.item_sd,
-        #         sd_amount = item.sd_amount,
-        #         vat_rate = item.vat_rate,
-        #         vat_type = item.vat_type,
-        #         vatable_value = item.vatable_value,
-        #         rebate = item.rebate,
-        #         item_total = item.item_total,
-        #         purchase_date = srv.entry_date,
-        #         entry_date = srv.entry_date,
-        #         p_date = srv.entry_date
-        #         )
-        #     db.add(purchase_item)
+        for item in Spurchase.items:
+            purchase_item = Purchase_item(
+                item_id = item.item_id,
+                hs_code = item.hs_code,
+                hs_code_id = item.hs_code_id,
+                purchase_id = srv.id,
+                qty = item.qty,
+                rate = item.rate,
+                access_amount = item.access_amount,
+                item_sd = item.item_sd,
+                sd_amount = item.sd_amount,
+                vat_rate = item.vat_rate,
+                vat_type = item.vat_type,
+                vatable_value = item.vatable_value,
+                rebate = item.rebate,
+                item_total = item.item_total,
+                purchase_date = srv.entry_date,
+                entry_date = srv.entry_date,
+                p_date = srv.entry_date
+                )
+            db.add(purchase_item)
         db.commit()
         return {"Message": "Successfully Added"}
 

@@ -34,4 +34,4 @@ class ServicePurchaseInsertSchema(BaseModel):
     total_sd: Optional[float] = None
     grand_total: Optional[float] = None
     notes: Optional[str] = None
-    # items: List[ServicePurchaseItemInsertSchema]
+    items: List[ServicePurchaseItemInsertSchema]
