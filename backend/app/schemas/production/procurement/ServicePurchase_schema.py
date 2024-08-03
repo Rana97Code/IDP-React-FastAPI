@@ -21,7 +21,7 @@ class ServicePurchaseItemInsertSchema(BaseModel):
 
    
 
-#foreign purchase insert Schema  
+#Service purchase insert Schema  
 class ServicePurchaseInsertSchema(BaseModel):
     purchase_type: Optional[int] = None
     purchase_category: Optional[int] = None
@@ -35,3 +35,12 @@ class ServicePurchaseInsertSchema(BaseModel):
     grand_total: Optional[float] = None
     notes: Optional[str] = None
     items: List[ServicePurchaseItemInsertSchema]
+
+
+    #Service purchase insert Schema  
+class ServicePurchaseFetch(BaseModel):
+    invoice_no: Optional[str] = None
+    vendor_inv: Optional[str] = None
+    chalan_date: Optional[date] = None
+    grand_total: Optional[float] = None
+

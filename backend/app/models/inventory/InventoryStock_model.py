@@ -15,7 +15,7 @@ class Stock(Base):
     rate = Column(Float, nullable=True)
     status = Column(Integer, nullable=True)
     user_id = Column(Integer, nullable=True)
-    created_at = Column(Date, server_default=func.now(), nullable=False)
+    created_at = Column(Date, server_default=func.now())
 
 
 

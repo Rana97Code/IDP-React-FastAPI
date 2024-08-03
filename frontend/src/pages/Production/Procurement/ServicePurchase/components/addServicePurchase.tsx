@@ -162,7 +162,6 @@ const addServicePurchase = () => {
                         if (clickedValue > 0) {
 
 
-                            const token = localStorage.getItem('Token');
                             if (user) {
 
                                 axios.get(`${baseUrl}/service_purchase/get_service_item_details/${clickedValue}`, { headers })
@@ -740,12 +739,9 @@ const addServicePurchase = () => {
 
             console.log(purchase);
 
-            const token = localStorage.getItem('Token');
-            if (token) {
-                const bearer = JSON.parse(token);
-                const headers = { Authorization: `Bearer ${bearer}` }
+            if (user) {
+
                 try {
-                    // process.exit();
 
                     await axios.post(`${baseUrl}/service_purchase/add-service-purchase`, purchase, { headers })
                         .then(function (response) {

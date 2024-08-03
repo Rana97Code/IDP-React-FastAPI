@@ -12,100 +12,13 @@ from datetime import datetime
 from sqlalchemy.sql.sqltypes import Numeric
 from app.models.inventory.InventoryStock_model import Stock, StockHistory
 from app.models.production.procurement.Purchase_model import Purchase,Purchase_item
+from app.models.relationship.supplier_model import Supplier
 from app.schemas.production.procurement.ForeignPurchase_schema import ForeignPurchaseInsertSchema,ItemDetailsModel, PurchaseTableDetailsModel
-from app.schemas.production.procurement.ServicePurchase_schema import ServicePurchaseInsertSchema
+from app.schemas.production.procurement.ServicePurchase_schema import ServicePurchaseInsertSchema, ServicePurchaseFetch
 from app.models.general_settings.hs_code_model import Hscode
 from app.models.inventory.item_model import Item, ItemSuggest
 
 Service_purchase_router = APIRouter()
-
-@Service_purchase_router.post("/bmitvat/api/service_purchase/add-service-purchase", dependencies=[Depends(get_current_active_user)])
-async def create_foreign_purchase(Spurchase: ServicePurchaseInsertSchema, db: Session = Depends(get_db)):
-    try:
-        last_purchase = db.query(Purchase).order_by(desc(Purchase.id)).first()
-        PurchaseInv = "SER-" + datetime.now().strftime('%Y%m%d') + '-' + f"{int(last_purchase.id) + 1:04d}"
-        srvp = Purchase(
-            invoice_no= PurchaseInv,
-            vendor_inv=Spurchase.chalan_number,
-            supplier_id=Spurchase.supplier_id,
-            purchase_type=Spurchase.purchase_type,
-            purchase_category=Spurchase.purchase_category,
-            grand_total=Spurchase.grand_total,
-            total_tax=Spurchase.total_tax,
-            total_sd=Spurchase.total_sd,
-            fiscal_year=Spurchase.fiscal_year,
-            notes=Spurchase.notes,
-            user_id='1',
-            chalan_date=Spurchase.chalan_date,
-            entry_date=Spurchase.entry_date
-            )
-        db.add(srvp)
-        db.flush()  # Get the srv.id before committing
-        for item in Spurchase.items:
-            purchase_item = Purchase_item(
-                item_id = item.item_id,
-                purchase_id = srvp.id,
-                hs_code = item.hs_code,
-                hs_code_id = item.hs_code_id,
-                qty = item.qty,
-                rate = item.rate,
-                access_amount = item.access_amount,
-                item_sd = item.item_sd,
-                sd_amount = item.sd_amount,
-                vatable_value = item.vatable_value,
-                vat_type = item.vat_type,
-                vat_rate = item.vat_rate,
-                vat_amount = item.vat_amount,
-                vds = item.vds,
-                rebate = item.rebate,
-                item_total = item.item_total,
-                purchase_date = srvp.entry_date
-                )
-            db.add(purchase_item)
-
-        #    Stock Manage 
-            item_stock = db.query(Stock).filter(Stock.item_id == item.item_id).order_by(desc(Stock.id)).first()
-            print(item_stock.id, item_stock.qty)
-
-            if item_stock:
-                # Update the existing stock entry
-                item_stock.qty += item.qty
-                item_stock.rate = item.rate
-            else:
-                # Insert a new stock entry
-                stock = Stock(
-                    item_id = item.item_id,
-                    qty = item.qty,
-                    rate = item.rate,
-                    status = 1
-                    )
-                db.add(stock)
-
-            stock_history = StockHistory(
-                item_id = item.item_id,
-                action_tbl= 'purchase',
-                action_tbl_id = srvp.id,
-                action_type='increment',
-                previous_stock = item_stock.qty,
-                qty = item.qty,
-                status = 1
-            )
-            db.add(stock_history)
-
-        db.commit()
-        return {"Message": "Successfully Added"}
-
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(status_code=400, detail=f"Error occurred: {e}")
-    finally:
-        db.close()
-
-
-
-
-
-
 
 
 
@@ -179,3 +92,119 @@ async def get_item_details_by_id(item_id: int, db: Session = Depends(get_db)):
         raise e
     except Exception as e:
         print(f"Unexpected error: {e}")
+
+
+
+@Service_purchase_router.post("/bmitvat/api/service_purchase/add-service-purchase", dependencies=[Depends(get_current_active_user)])
+async def create_foreign_purchase(Spurchase: ServicePurchaseInsertSchema, db: Session = Depends(get_db)):
+    try:
+        last_purchase = db.query(Purchase).order_by(desc(Purchase.id)).first()
+        PurchaseInv = "SER-" + datetime.now().strftime('%Y%m%d') + '-' + f"{int(last_purchase.id) + 1:04d}"
+        srvp = Purchase(
+            invoice_no= PurchaseInv,
+            vendor_inv=Spurchase.chalan_number,
+            supplier_id=Spurchase.supplier_id,
+            purchase_type=Spurchase.purchase_type,
+            purchase_category=Spurchase.purchase_category,
+            grand_total=Spurchase.grand_total,
+            total_tax=Spurchase.total_tax,
+            total_sd=Spurchase.total_sd,
+            fiscal_year=Spurchase.fiscal_year,
+            notes=Spurchase.notes,
+            user_id='1',
+            chalan_date=Spurchase.chalan_date,
+            entry_date=Spurchase.entry_date
+            )
+        db.add(srvp)
+        db.flush()  # Get the srv.id before committing
+        for item in Spurchase.items:
+            purchase_item = Purchase_item(
+                item_id = item.item_id,
+                purchase_id = srvp.id,
+                hs_code = item.hs_code,
+                hs_code_id = item.hs_code_id,
+                qty = item.qty,
+                rate = item.rate,
+                access_amount = item.access_amount,
+                item_sd = item.item_sd,
+                sd_amount = item.sd_amount,
+                vatable_value = item.vatable_value,
+                vat_type = item.vat_type,
+                vat_rate = item.vat_rate,
+                vat_amount = item.vat_amount,
+                vds = item.vds,
+                rebate = item.rebate,
+                item_total = item.item_total,
+                purchase_date = srvp.entry_date
+                )
+            db.add(purchase_item)
+
+        #    Stock Manage 
+            item_stock = db.query(Stock).filter(Stock.item_id == item.item_id).first()
+            if item_stock is not None:
+                # Update the existing stock entry
+                item_stock.qty += item.qty
+                item_stock.rate = item.rate
+
+                stock_history = StockHistory(
+                    item_id = item.item_id,
+                    action_tbl= 'purchase',
+                    action_tbl_id = srvp.id,
+                    action_type='increment',
+                    previous_stock = item_stock.qty,
+                    qty = item.qty,
+                    status = 1
+                )
+                db.add(stock_history)
+            else:
+                # Insert a new stock entry
+                stock = Stock(
+                    item_id = item.item_id,
+                    qty = item.qty,
+                    rate = item.rate,
+                    status = 1
+                    )
+                db.add(stock)
+
+                stock_history = StockHistory(
+                    item_id = item.item_id,
+                    action_tbl= 'purchase',
+                    action_tbl_id = srvp.id,
+                    action_type='increment',
+                    previous_stock = 0,
+                    qty = item.qty,
+                    status = 1
+                )
+                db.add(stock_history)
+
+        db.commit()
+        return {"Message": "Successfully Added"}
+
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=400, detail=f"Error occurred: {e}")
+    finally:
+        db.close()
+
+
+
+
+@Service_purchase_router.get("/bmitvat/api/service_purchase/all_service_purchase",response_model=List[ServicePurchaseFetch], dependencies=[Depends(get_current_active_user)])
+async def index(db:Session=Depends(get_db)):
+
+    x=db.query(Purchase, Supplier).join(Supplier, Purchase.supplier_id==Supplier.id).filter(Purchase.purchase_type==3)\
+        .add_columns(Purchase.id,Supplier.supplier_name,Purchase.invoice_no,Purchase.vendor_inv,Purchase.chalan_date,Purchase.grand_total).all()
+    #print(x)
+    p_item =[]
+    for pp in x:
+        p_item.append({
+           'id': pp.id,
+           'invoice_no': pp.invoice_no,
+           'vendor_inv': pp.vendor_inv,
+           'chalan_date': pp.chalan_date,
+           'supplier_name': pp.supplier_name,
+           'grand_total': pp.grand_total,
+           })
+
+    junit = jsonable_encoder(p_item)
+    return JSONResponse(content=junit)
