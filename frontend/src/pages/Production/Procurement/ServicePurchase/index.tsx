@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useState, Fragment, useEffect, useContext  } from 'react';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import sortBy from 'lodash/sortBy';
@@ -8,6 +8,7 @@ import { setPageTitle } from '../../../../store/themeConfigSlice';
 import IconPlus from '../../../../components/Icon/IconPlus';
 import axios from 'axios';
 import UserContext from '../../../../context/UserContex';
+import IconEye from '../../../../components/Icon/IconEye';
 
 
 const index = () => {
@@ -143,7 +144,18 @@ const index = () => {
                             records={recordsDataWithIndex}
                             columns={[
                                 { accessor: 'index', title: 'Serial', sortable: true },
-                                { accessor: 'invoice_no', title: 'Invoice No', sortable: true },
+                                // { accessor: 'invoice_no', title: 'Invoice No', sortable: true },
+                                {
+                                    accessor: 'invoice_no', title: 'Invoice No', sortable: false, textAlignment: 'center',
+                                    render: ({ id, invoice_no }) => (
+                                        <div className="flex gap-4 items-center w-max mx-auto">
+                                            <NavLink to={"/pages/invoice/purchase_invoice/" + id} className="flex text-primary m-1 p-2">
+                                                <IconEye className="w-4.5 h-3.5 mr-2" />
+                                                {invoice_no}
+                                            </NavLink>
+                                        </div>
+                                    ),
+                                },
                                 { accessor: 'vendor_inv', title: 'Chalan No', sortable: true },
                                 { accessor: 'chalan_date', title: 'Chalan Date', sortable: true },
                                 { accessor: 'supplier_name', title: 'Supplier Name', sortable: true },

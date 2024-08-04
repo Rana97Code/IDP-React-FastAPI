@@ -20,6 +20,7 @@ from app.routes.production.wastage.wastage_router import Wastage_router
 from app.routes.production.procurement.service_purchase_router import Service_purchase_router  
 from app.routes.production.procurement.foreign_purchase_router import Purchase_router  
 from app.routes.general_settings.cpc_router import cpc_router  
+from app.routes.invoice.purchase_invoice_route import purchase_invoice_router  
 
 
 
@@ -49,5 +50,6 @@ router.include_router(Wastage_router)
 router.include_router(Purchase_router)
 router.include_router(Service_purchase_router)
 router.include_router(cpc_router)
+router.include_router(purchase_invoice_router)
 
 

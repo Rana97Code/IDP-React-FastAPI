@@ -93,7 +93,7 @@ const CpcCode = lazy(() => import('../pages/GeneralSettings/CpcCode/index'));
 const CpcAdd = lazy(() => import('../pages/GeneralSettings/CpcCode/components/cpcAdd'));
 const CpcEdit = lazy(() => import('../pages/GeneralSettings/CpcCode/components/cpcEdit'));
 
-const LocalPurchaseInvoice = lazy(() => import('../pages/Invoice/LocalPurchaseInvoice'));
+const PurchaseInvoice = lazy(() => import('../pages/Invoice/PurchaseInvoice'));
 
 const DebitNoteAdd = lazy(() => import('../pages/Production/Procurement/DebitNote/components/AddDebitNote'));
 
@@ -296,8 +296,8 @@ const routes = [
         element: <LocalPurchaseAdd />,
     },
     {
-        path: '/pages/invoice/local_purchase/:id',
-        element: <LocalPurchaseInvoice />,
+        path: '/pages/invoice/purchase_invoice/:id',
+        element: <PurchaseInvoice />,
     },
     {
         path: '/pages/procurment/foreign_purchase/index',

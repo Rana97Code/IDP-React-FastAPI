@@ -1,33 +1,34 @@
-import React from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Link, NavLink, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import { DataTable, DataTableSortStatus } from 'mantine-datatable';
 import sortBy from 'lodash/sortBy';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import axios from 'axios';
+import UserContext from '../../context/UserContex';
 
-
-const LocalPurchaseInvoice = () => {
+const PurchaseInvoice = () => {
     const params = useParams();
-
+    const user = useContext(UserContext);
+    const headers = user.headers;
+    const baseUrl = user.base_url;
 
     useEffect(() => {
         const token = localStorage.getItem('Token');
         if (token) {
             const bearer = JSON.parse(token);
             const headers = { Authorization: `Bearer ${bearer}` }
-        axios.get(`http://localhost:8080/bmitvat/api/purchase/local_purchase_invoice/${params.id}`,{headers})
+        axios.get(`${baseUrl}/purchase/purchase_invoice/${params.id}`,{headers})
             .then((response) => {
-                setRawMaterialsRecords(response.data.purchaseItems);
-                setChalanDate(response.data.supplierDetails.chalanDate);
-                setSuppliersName(response.data.supplierDetails.supplierName);
-                setSuppliersEmail(response.data.supplierDetails.supplierEmail);
-                setSuppliersPhone(response.data.supplierDetails.supplierPhone);
-                setSuppliersCountry(response.data.supplierDetails.countryName);
-                setSuppliersAddress(response.data.supplierDetails.supplierAddress);
-                setSuppliersTin(response.data.supplierDetails.supplierTin);
-                setSuppliersType(response.data.supplierDetails.supplierType);
+                setRawMaterialsRecords(response.data.items);
+                setChalanDate(response.data.supplierDetails.chalan_date);
+                setSuppliersName(response.data.supplierDetails.supplier_name);
+                setSuppliersEmail(response.data.supplierDetails.supplier_email);
+                setSuppliersPhone(response.data.supplierDetails.supplier_phone);
+                setSuppliersCountry(response.data.supplierDetails.country_name);
+                setSuppliersAddress(response.data.supplierDetails.s_address);
+                setSuppliersTin(response.data.supplierDetails.s_tin);
+                setSuppliersType(response.data.supplierDetails.supplier_type);
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
@@ -41,27 +42,27 @@ const LocalPurchaseInvoice = () => {
     });
 
     interface suppliers {
-        supplierName: string;
-        supplierEmail: string;
-        supplierPhone: string;
-        supplierCountry: string;
-        supplierAddress: string;
-        supplierTin: string;
+        supplier_name: string;
+        supplier_email: string;
+        supplier_phone: string;
+        supplier_type: string;
+        s_address: string;
+        s_tin: string;
       }
       
       interface RecordWithIndex {
         [key: string]: any; // Define the type for each property in the record
         index: number; // Add index property
         serial: string;
-        itemName: string;
-        hsCode: string;
+        item_name: string;
+        hs_code: string;
         qty: number;
         rate: number;
-        amount: number;
-        sdAmount: number;
-        vatableValue: number;
-        taxAmount: number;
-        tamount: number;
+        access_amount: number;
+        sd_amount: number;
+        vatable_value: number;
+        vat_amount: number;
+        item_total: number;
     }
 
     const [suppliersDetails, setSuppliersRecords] = useState<suppliers[]>([]);
@@ -109,15 +110,15 @@ const LocalPurchaseInvoice = () => {
             return initialRecords.filter((item: any) => {
                 return (
                     item.index.toString().includes(search.toLowerCase()) ||
-                    item.itemName.toLowerCase().includes(search.toLowerCase()) ||
-                    item.hsCode.toLowerCase().includes(search.toLowerCase()) ||
+                    item.item_name.toLowerCase().includes(search.toLowerCase()) ||
+                    item.hs_code.toLowerCase().includes(search.toLowerCase()) ||
                     item.qty.toLowerCase().includes(search.toLowerCase()) ||
                     item.rate.toLowerCase().includes(search.toLowerCase()) ||
-                    item.amount.toLowerCase().includes(search.toLowerCase()) ||
-                    item.sdAmount.toLowerCase().includes(search.toLowerCase()) ||
-                    item.vatableValue.toLowerCase().includes(search.toLowerCase()) ||
-                    item.taxAmount.toLowerCase().includes(search.toLowerCase()) ||
-                    item.tamount.toLowerCase().includes(search.toLowerCase())
+                    item.access_amount.toLowerCase().includes(search.toLowerCase()) ||
+                    item.sd_amount.toLowerCase().includes(search.toLowerCase()) ||
+                    item.vatable_value.toLowerCase().includes(search.toLowerCase()) ||
+                    item.vat_amount.toLowerCase().includes(search.toLowerCase()) ||
+                    item.item_total.toLowerCase().includes(search.toLowerCase())
                 );
             });
         });
@@ -190,15 +191,15 @@ const LocalPurchaseInvoice = () => {
                         records={recordsDataWithIndex}
                         columns={[
                             { accessor: 'index', title: 'Serial', sortable: true },
-                            { accessor: 'itemName', title: 'Item Name', sortable: true },
-                            { accessor: 'hsCode', title: 'HS-Code', sortable: true },
+                            { accessor: 'item_name', title: 'Item Name', sortable: true },
+                            { accessor: 'hs_code', title: 'HS-Code', sortable: true },
                             { accessor: 'qty', title: 'Quantity', sortable: true },
                             { accessor: 'rate', title: 'Rate', sortable: true },
-                            { accessor: 'amount', title: 'Value', sortable: true },
-                            { accessor: 'sdAmount', title: 'Sd Amount', sortable: true },
-                            { accessor: 'vatableValue', title: 'Vatable Amount', sortable: true },
-                            { accessor: 'taxAmount', title: 'Vat Amount', sortable: true },
-                            { accessor: 'tamount', title: 'Total Amount', sortable: true },
+                            { accessor: 'access_amount', title: 'Value', sortable: true },
+                            { accessor: 'sd_amount', title: 'Sd Amount', sortable: true },
+                            { accessor: 'vatable_value', title: 'Vatable Amount', sortable: true },
+                            { accessor: 'vat_amount', title: 'Vat Amount', sortable: true },
+                            { accessor: 'item_total', title: 'Total Amount', sortable: true },
                         ]}
                         totalRecords={initialRecords.length}
                         recordsPerPage={pageSize}
@@ -218,4 +219,4 @@ const LocalPurchaseInvoice = () => {
     );
 };
 
-export default LocalPurchaseInvoice;
+export default PurchaseInvoice;
