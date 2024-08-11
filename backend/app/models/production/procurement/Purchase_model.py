@@ -1,5 +1,5 @@
 from app.db.database import engine, Base, SessionLocal
-from sqlalchemy import Column, Float,String,Integer,Boolean,SmallInteger,DateTime,Date
+from sqlalchemy import Column, Float,String,Integer,Boolean,ForeignKey,DateTime,Date
 from sqlalchemy.orm import relationship
 from pydantic import BaseModel
 from datetime import datetime,date, time
@@ -11,7 +11,7 @@ class Purchase(Base):
     id=Column(Integer,primary_key=True,index=True)
     invoice_no = Column(String(255), nullable=True)
     vendor_inv = Column(String(255), nullable=True)
-    supplier_id=Column(Integer,nullable=True)
+    supplier_id= Column(Integer, ForeignKey('suppliers.id'))
     purchase_type=Column(Integer,nullable=True)
     purchase_category=Column(Integer,nullable=True)
     lc_number=Column(String(255),nullable=True)
@@ -30,13 +30,13 @@ class Purchase(Base):
     entry_date = Column(Date, index=True, nullable=False)
     chalan_date = Column(Date, index=True, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
-   
+    purchase_items = relationship("Purchase_item", back_populates="purchase")
 
 class Purchase_item(Base):
     __tablename__='purchase_item'
     id = Column(Integer,primary_key=True,index=True)
-    item_id= Column(Integer,nullable=True)
-    purchase_id= Column(Integer,nullable=True)
+    item_id= Column(Integer, ForeignKey('items.id'))
+    purchase_id= Column(Integer, ForeignKey('purchase.id'))
     hs_code=Column(String(255),nullable=True)
     hs_code_id=Column(Integer,nullable=True)
     boe_item_no=Column(Integer,nullable=True)
@@ -60,6 +60,8 @@ class Purchase_item(Base):
     item_total=Column(Float,nullable=True)
     purchase_date = Column(Date, index=True,nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, index=True)
-
+    # Define the relationship with Purchase
+    purchase = relationship("Purchase", back_populates="purchase_items")
+    item = relationship("Item")  # Assuming a relationship with Item
     
 Base.metadata.create_all(bind=engine)

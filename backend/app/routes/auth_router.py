@@ -129,7 +129,7 @@ async def get_current_user(token: Annotated[str, Depends(oath2pass)], db:Session
         raise HTTPException(status_code=401, detail="JWT Error")
     result = db.query(User).filter(User.user_email==token_data.user_email).first()
     user = result
-    print(jsonable_encoder(user))
+    # print(jsonable_encoder(user))
     if user is None:
         raise HTTPException(status_code=401, detail="User Error")
     return user

@@ -1,14 +1,19 @@
-import React, { ChangeEvent, ChangeEventHandler } from 'react';
+import React, { ChangeEvent, ChangeEventHandler, useContext  } from 'react';
 import { useEffect, useState, useRef } from 'react';
 import IconFile from '../../../../../components/Icon/IconFile';
 import IconTrashLines from '../../../../../components/Icon/IconTrashLines';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { exists } from 'i18next';
+import UserContext from '../../../../../context/UserContex';
 
+const addLocalPurchase = () => {
 
-const addLocalPurchase: React.FC = () => {
     const navigate = useNavigate();
+    const user = useContext(UserContext);
+    const headers = user.headers;
+    const baseUrl = user.base_url;
+    const token = user.token;
 
 
     // Function to get today's date in the format "YYYY-MM-DD"
@@ -23,20 +28,20 @@ const addLocalPurchase: React.FC = () => {
 
     interface suppliers {
         id: number;
-        supplierName: string;
-        supplierAddress: string;
+        supplier_name: string;
+        supplier_address: string;
     }
 
     interface suggestItem {
         id: number;
-        itemName: string;
+        item_name: string;
     }
 
     interface detailsItem {
         id: number;
-        itemName: string;
-        hsCodeId: number;
-        hsCode: string;
+        item_name: string;
+        hs_code_id: number;
+        hs_code: string;
         sd: number;
         vat: number;
     }
@@ -52,43 +57,37 @@ const addLocalPurchase: React.FC = () => {
     const [chalanDate, setChalanDate] = useState(getTodayDate());
     const [fiscalYear, setFiscalYear] = useState("");
 
-    const [note, setNote] = useState('');
-
 
 
     useEffect(() => {
-        const token = localStorage.getItem('Token');
-        if (token) {
-            const bearer = token.slice(1, -1);
+        if (user) {
 
-            const headers = { Authorization: `Bearer ${bearer}` }
-
-            axios.get('http://localhost:8080/bmitvat/api/supplier/all_supplier', { headers })
+            axios.get(`${baseUrl}/supplier/all_supplier`, { headers })
                 .then((response) => {
-                    setAllSupplier(response.data);
+                    if (Array.isArray(response.data)) {
+                        setAllSupplier(response.data);
+                      } else {
+                        throw new Error('Response data is not an array');
+                      }
                 })
                 .catch((error) => {
                     console.error('Error fetching data:', error);
                 });
 
         }
-    }, []);
+    }, [user]);
 
 
 
     const getSupplierId: ChangeEventHandler<HTMLSelectElement> = (event) => {
         const selectedOptionId = event.target.value;
+        if (user) {
 
-        const token = localStorage.getItem('Token');
-        if (token) {
-            const bearer = JSON.parse(token);
-            const headers = { Authorization: `Bearer ${bearer}` }
-
-            axios.get(`http://localhost:8080/bmitvat/api/supplier/get_supplier/${selectedOptionId}`, { headers })
+            axios.get(`${baseUrl}/supplier/get_supplier/${selectedOptionId}`, { headers })
                 .then((response) => {
                     const data = response.data;
                     setSupplier(data.id)
-                    setAddress(data.supplierAddress)
+                    setAddress(data.s_address)
 
                 })
                 .catch((error) => {
@@ -119,17 +118,15 @@ const addLocalPurchase: React.FC = () => {
             suggestionsList.innerHTML = '';
             return;
         }
-        const token = localStorage.getItem('Token');
         if (token) {
-            const bearer = JSON.parse(token);
-            const headers = { Authorization: `Bearer ${bearer}` }
+
 
             let selectElement = document.getElementById('fiscalYear') as HTMLSelectElement;
             let fiscalYear = selectElement.value;
 
             const searchTerm = fiscalYear + '/' + searchInput.value;
             try {
-                const response = await axios.post('http://localhost:8080/bmitvat/api/item/getItemSuggestions', searchTerm, { headers });
+                const response = await axios.post(`${baseUrl}/local_purchase/get_local_item_suggestions`, searchTerm, { headers });
                 // <string[]>
                 const suggestions = response.data;
                 setSuggestItem(suggestions);
@@ -143,7 +140,7 @@ const addLocalPurchase: React.FC = () => {
                     listItem.style.padding = '10px';
                     listItem.className = 'suggestion-item';
                     listItem.value = suggestion.id;
-                    listItem.textContent = suggestion.itemName;
+                    listItem.textContent = suggestion.item_name;
                     suggestionsList.appendChild(listItem);
                 });
 
@@ -165,12 +162,9 @@ const addLocalPurchase: React.FC = () => {
                         if (clickedValue > 0) {
 
 
-                            const token = localStorage.getItem('Token');
-                            if (token) {
-                                const bearer = JSON.parse(token);
-                                const headers = { Authorization: `Bearer ${bearer}` }
+                            if (user) {
 
-                                axios.get(`http://localhost:8080/bmitvat/api/purchase/get_item_details/${clickedValue}`, { headers })
+                                axios.get(`${baseUrl}/local_purchase/get_local_item_details/${clickedValue}`, { headers })
                                     .then((response) => {
                                         const data = response.data;
                                         setItemDetails(data);
@@ -189,23 +183,40 @@ const addLocalPurchase: React.FC = () => {
 
                                 const inputId = document.createElement('input');
                                 inputId.type = 'hidden';
-                                inputId.name = 'itemId';
+                                inputId.name = 'item_id';
                                 inputId.value = data.id;
                                 inputId.autocomplete = 'off';
                                 inputId.disabled = true;
                                 inputId.style.cssText = 'width: 1px;';
 
+                                const inputId1 = document.createElement('input');
+                                inputId1.type = 'hidden';
+                                inputId1.name = 'hs_code_id';
+                                inputId1.value = data.hs_code_id;
+                                inputId1.autocomplete = 'off';
+                                inputId1.disabled = true;
+                                inputId1.style.cssText = 'border: 1px;';
+
+
+                                const inputId2 = document.createElement('input');
+                                inputId2.type = 'hidden';
+                                inputId2.name = 'hs_code';
+                                inputId2.value = data.hs_code;
+                                inputId2.autocomplete = 'off';
+                                inputId2.disabled = true;
+                                inputId2.style.cssText = 'border: 1px;';
+
                                 const input = document.createElement('input');
                                 input.type = 'text';
-                                input.name = 'itemName';
-                                input.value = data.itemName;
+                                input.name = 'item_name';
+                                input.value = data.item_name;
                                 input.autocomplete = 'off';
                                 input.disabled = true;
                                 input.style.cssText = 'border: 1px solid black; width: 180px;';
 
                                 const input1 = document.createElement('input');
                                 input1.type = 'number';
-                                input1.name = 'quantity';
+                                input1.name = 'qty';
                                 input1.className = '';
                                 input1.value = '';
                                 input1.id = 'qtyId';
@@ -254,7 +265,7 @@ const addLocalPurchase: React.FC = () => {
 
                                 const input3 = document.createElement('input');
                                 input3.type = 'number';
-                                input3.name = 'priceValue';
+                                input3.name = 'access_amount';
                                 input3.className = '';
                                 input3.value = '';
                                 input3.autocomplete = 'off';
@@ -265,7 +276,7 @@ const addLocalPurchase: React.FC = () => {
 
                                 const input4 = document.createElement('input');
                                 input4.type = 'number';
-                                input4.name = 'sd';
+                                input4.name = 'item_sd';
                                 input4.className = '';
                                 input4.value = data.sd;
                                 input4.autocomplete = 'off';
@@ -276,7 +287,7 @@ const addLocalPurchase: React.FC = () => {
 
                                 const input5 = document.createElement('input');
                                 input5.type = 'number';
-                                input5.name = 'sdAmount';
+                                input5.name = 'sd_amount';
                                 input5.className = 'total_sd';
                                 input5.value = '';
                                 input5.autocomplete = 'off';
@@ -286,7 +297,7 @@ const addLocalPurchase: React.FC = () => {
 
                                 const input6 = document.createElement('input');
                                 input6.type = 'number';
-                                input6.name = 'vatableValue';
+                                input6.name = 'vatable_value';
                                 input6.className = '';
                                 input6.value = '';
                                 input6.autocomplete = 'off';
@@ -295,7 +306,7 @@ const addLocalPurchase: React.FC = () => {
                                 input6.style.cssText = 'border: 1px solid black; width: 160px;';
 
                                 const selectElement = document.createElement('select');
-                                selectElement.name = 'vatType';
+                                selectElement.name = 'vat_type';
                                 selectElement.className = '';
                                 selectElement.style.cssText = 'border: 1px solid black; width: 180px;';
 
@@ -375,7 +386,7 @@ const addLocalPurchase: React.FC = () => {
 
                                 const input8 = document.createElement('input');
                                 input8.type = 'number';
-                                input8.name = 'vatRate';
+                                input8.name = 'vat_rate';
                                 input8.className = '';
                                 input8.value = data.vat;
                                 input8.autocomplete = 'off';
@@ -384,7 +395,7 @@ const addLocalPurchase: React.FC = () => {
                                 input8.style.cssText = 'border: 1px solid black; width: 100px; display:block;';
 
                                 const selectStandard = document.createElement('select');
-                                selectStandard.name = 'vatStRate';
+                                selectStandard.name = 'vat_ots_rate';
                                 selectStandard.className = '';
                                 selectStandard.style.cssText = 'border: 1px solid black; width: 100px; display:none;';
 
@@ -472,7 +483,7 @@ const addLocalPurchase: React.FC = () => {
 
                                 const input9 = document.createElement('input');
                                 input9.type = 'number';
-                                input9.name = 'vatAmount';
+                                input9.name = 'vat_amount';
                                 input9.className = 'total_vat';
                                 input9.value = '';
                                 input9.autocomplete = 'off';
@@ -519,7 +530,7 @@ const addLocalPurchase: React.FC = () => {
 
                                 const input10 = document.createElement('input');
                                 input10.type = 'number';
-                                input10.name = 'totalAmount';
+                                input10.name = 'item_total';
                                 input10.className = 'total_amount';
                                 input10.value = '';
                                 input10.autocomplete = 'off';
@@ -604,6 +615,10 @@ const addLocalPurchase: React.FC = () => {
 
                                 const cellId = newRow.insertCell();
                                 cellId.appendChild(inputId);
+                                const cellId1 = newRow.insertCell();
+                                cellId1.appendChild(inputId1);
+                                const cellId2 = newRow.insertCell();
+                                cellId2.appendChild(inputId2);
                                 const cell = newRow.insertCell();
                                 cell.appendChild(input);
                                 const cell1 = newRow.insertCell();
@@ -656,23 +671,33 @@ const addLocalPurchase: React.FC = () => {
 
                 const rowData: any = {};
 
+                const itemArray = [
+                    'item_id',
+                    'hs_code',
+                    'hs_code_id',
+                    'qty',
+                    'rate',
+                    'access_amount',
+                    'item_sd',
+                    'sd_amount',
+                    'vatable_value',
+                    'vat_type',
+                    'vat_rate',
+                    'vat_amount',
+                    'vds',
+                    'rebate',
+                    'item_total'
+                ];
+
                 row.querySelectorAll('td input, td select').forEach((input) => {
                     const inputElement = input as HTMLInputElement;
                     const inputElementSelect = input as HTMLSelectElement;
-                    const selectValue = inputElement.type === 'select-one' ? inputElementSelect.value : inputElement.value;
-                    rowData[inputElement.name || 'itemId'] = inputElement.value;
-                    rowData[inputElement.name || 'quantity'] = inputElement.value;
-                    rowData[inputElement.name || 'rate'] = inputElement.value;
-                    rowData[inputElement.name || 'priceValue'] = inputElement.value;
-                    rowData[inputElement.name || 'sd'] = inputElement.value;
-                    rowData[inputElement.name || 'sdAmount'] = inputElement.value;
-                    rowData[inputElement.name || 'vatableValue'] = inputElement.value;
-                    rowData[inputElement.name || 'vatType'] = inputElement.value;
-                    rowData[inputElement.name || 'vatRate'] = inputElement.value;
-                    rowData[inputElement.name || 'vatAmount'] = inputElement.value;
-                    rowData[inputElement.name || 'vds'] = selectValue;
-                    rowData[inputElement.name || 'rebate'] = selectValue;
-                    rowData[inputElement.name || 'totalAmount'] = inputElement.value;
+                    const fieldName = inputElement.name || inputElement.id;
+                    const value = inputElement.type === 'select-one' ? inputElementSelect.value : inputElement.value;
+
+                    if (itemArray.includes(fieldName)) {
+                        rowData[fieldName] = value;
+                    }
                 });
 
                 arrayData.push(rowData);
@@ -687,37 +712,38 @@ const addLocalPurchase: React.FC = () => {
         const TotalVat = document.getElementById('vatTotal') as HTMLInputElement;
         const TotalSD = document.getElementById('sdTotal') as HTMLInputElement;
         const AllTotal = document.getElementById('grandTotal') as HTMLInputElement;
+        const notes = document.getElementById('notes') as HTMLInputElement;
 
-        if (TotalVat || TotalSD || AllTotal) {
+        if (TotalVat || TotalSD || AllTotal || notes) {
             const Vat = TotalVat.value;
             const SD = TotalSD.value;
             const ALL = AllTotal.value;
+            const note = notes.value;
 
 
             const purchase = {
-                supplierId: supplier,
-                entryDate: entryDate,
-                chalanNumber: chalanNo,
-                chalanDate: chalanDate,
-                fiscalYear: fiscalYear,
-                purchaseItems: arrayData,
-                totalTax: Vat,
-                totalSd: SD,
-                grandTotal: ALL,
-                note: note
+                purchase_type: 1,
+                purchase_category: 1,
+                supplier_id: supplier,
+                entry_date: entryDate,
+                chalan_number: chalanNo,
+                chalan_date: chalanDate,
+                fiscal_year: fiscalYear,
+                total_tax: Vat,
+                total_sd: SD,
+                grand_total: ALL,
+                notes: note,
+                items: arrayData
 
             }
 
             console.log(purchase);
 
-            const token = localStorage.getItem('Token');
-            if (token) {
-                const bearer = JSON.parse(token);
-                const headers = { Authorization: `Bearer ${bearer}` }
-                try {
-                    // process.exit();
+            if (user) {
 
-                    await axios.post("http://localhost:8080/bmitvat/api/purchase/add-local-purchase", purchase, { headers })
+                try {
+
+                    await axios.post(`${baseUrl}/local_purchase/add-local-purchase`, purchase, { headers })
                         .then(function (response) {
                             navigate("/pages/procurment/local_purchase/index");
                         })
@@ -730,8 +756,6 @@ const addLocalPurchase: React.FC = () => {
     };
 
 
-
-
     return (
         <div>
             <div className="panel flex items-center justify-between flex-wrap gap-4 text-black">
@@ -739,61 +763,63 @@ const addLocalPurchase: React.FC = () => {
             </div>
             <div className="pt-5 gap-2">
                 <div className="mb-5">
-                    <div className="panel" id="browser_default">
-                        <div className="flex items-center justify-between mb-7">
-                            <h5 className="font-semibold text-lg dark:text-white-light">Add New Local Purchase</h5>
-                        </div>
-                        <div className="mb-5">
-                            <form className="space-y-5" onSubmit={handleSubmit}>
-                                <div className="grid grid-cols-1 md:grid-cols-6 gap-5">
-                                    <div>
-                                        <label htmlFor="getSupplier">Supplier</label>
-                                        <select id="getSupplier" onChange={getSupplierId} className="form-select text-dark col-span-4 text-sm" required >
+                        <div className="panel" id="browser_default">
+                            <div className="flex items-center justify-between mb-7">
+                                <h5 className="font-semibold text-lg dark:text-white-light">Add New Local Purchase</h5>
+                            </div>
+                            <div className="mb-5">
+                                <form className="space-y-5"  onSubmit={handleSubmit}>
+                                    <div className="grid grid-cols-1 md:grid-cols-6 gap-5">
+                                        <div>
+                                            <label htmlFor="gridState">Supplier</label>
+                                            <select id="getSupplier" onChange={getSupplierId} className="form-select text-dark col-span-4 text-sm" required >
                                             <option>Select Supplier</option>
                                             {all_suppliers.map((option, index) => (
                                                 <option key={index} value={option.id}>
-                                                    {option.supplierName}
+                                                    {option.supplier_name}
                                                 </option>
                                             ))}
                                         </select>
+                                        </div>
+                                        <div>
+                                            <label htmlFor="browserLname">Supplier Address</label>
+                                            <input id="browserLname" type="text" value={SuppAddress} className="form-input" required />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="browserLname">Entry Date</label>
+                                            <input id="browserLname" type="date" value ={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="form-input" required />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="browserLname">Chalan Number</label>
+                                            <input id="browserLname" type="text"  onChange={(e) => setChalanNo(e.target.value)} className="form-input" required />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="browserLname">Chalan Date</label>
+                                            <input id="browserLname" type="date"  onChange={(e) => setChalanDate(e.target.value)} className="form-input" required />
+                                        </div>
+                                        <div >
+                                            <label htmlFor="fiscalYear">Fiscal Year</label>
+                                            <select id="fiscalYear" className="form-select text-dark col-span-4 text-sm" onChange={(e) => setFiscalYear(e.target.value)} required>
+                                                <option>Please Select</option>
+                                                <option  value={"2024"}>2023-2024</option>
+                                                <option  value={"2023"}>2022-2023</option>
+                                            </select>
+                                            <h5 className='pt-4 text-danger text-sm font-semibold'>*Please Select Fiscal Year</h5>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label htmlFor="supplier_address">Supplier Address</label>
-                                        <input id="supplier_address" type="text" value={SuppAddress} className="form-input" required />
+                                    <div className="grid grid-cols-2 gap--x-2 gap-y-3">
+                                        <label htmlFor="searchInput" className='col-span-1 text-sm'>Add Items</label>
+                                        <input id="searchInput" type="text" placeholder="Enter Product Name" className="form-input py-2.5 text-sm col-span-2" onInput={getItemByKeyUp} />
+                                        <ul style={{ cursor: 'pointer' }} className="mt-10 ml-20 w-1/2 absolute bg-slate-300" id="suggestionsList"></ul>
                                     </div>
-                                    <div>
-                                        <label htmlFor="entry_date">Entry Date</label>
-                                        <input id="entry_date" type="date" className="form-input" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="challan_no">Chalan Number</label>
-                                        <input id="challan_no" type="text" placeholder="" className="form-input" onChange={(e) => setChalanNo(e.target.value)} required />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="challan_date">Chalan Date</label>
-                                        <input id="challan_date" type="date" className="form-input" value={chalanDate} onChange={(e) => setChalanDate(e.target.value)} />
-                                    </div>
-                                    <div>
 
-                                        <label htmlFor="fiscalYear">Fiscal Year</label>
-                                        <select id="fiscalYear" className="form-select text-dark col-span-4 text-sm" onChange={(e) => setFiscalYear(e.target.value)} required>
-                                            <option >Please Select</option>
-                                            <option value={"2024"} >2023-2024</option>
-                                            <option value={"2023"} >2022-2023</option>
-                                        </select>
-                                        <h5 className='pt-4 text-danger text-sm font-semibold'>*Please Select Fiscal Year</h5>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 gap--x-2 gap-y-3">
-                                    <label htmlFor="searchInput" className='col-span-1 text-sm'>Add Items</label>
-                                    <input id="searchInput" type="text" placeholder="Enter Product Name" className="form-input py-2.5 text-sm col-span-2" onInput={getItemByKeyUp} />
-                                    <ul style={{ cursor: 'pointer' }} className="mt-10 ml-20 w-1/2 absolute bg-slate-300" id="suggestionsList"></ul>
-                                </div>
-                                <div className="border overflow-hidden overflow-x-auto">
+                                    <div className="border overflow-hidden overflow-x-auto">
                                     <table id="dataTable" className="whitespace-nowrap table-hover border dataTable">
                                         <thead>
                                             <tr className="whitespace-nowrap border overflow-x-auto">
-                                                <th className="w-1"></th>
+                                                <th className="w-0"></th>
+                                                <th className="w-0"></th>
+                                                <th className="w-0"></th>
                                                 <th className="w-14" >Description</th>
                                                 <th className="w-9 border-black" >Quantity</th>
                                                 <th className="w-9" >Rate(BDT)</th>
@@ -834,25 +860,24 @@ const addLocalPurchase: React.FC = () => {
                                     </table>
                                 </div>
 
-                                <div className="grid grid-cols-5 gap--x-2 gap-y-3">
-                                    {/* <input type="hidden" name="allPurchaseItems" id="allPurchaseItems" /> */}
-                                    <label htmlFor="userName" className='col-span-1 text-sm'>Note</label>
-                                    <textarea id="userName" placeholder="Notes..." className="form-input py-2.5 text-sm col-span-4" onChange={(e) => setNote(e.target.value)} />
-                                </div>
 
-                                <div className="flex items-center justify-center gap-6 pt-4">
-                                    <button type="submit" className="btn btn-success gap-2" >
-                                        <IconFile className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
-                                        Submit
-                                    </button>
-                                    <Link to="/pages/procurment/local_purchase/index"><button type="button" className="btn btn-danger gap-2" >
+                                    <div className="grid grid-cols-5 gap--x-2 gap-y-3">
+                                        <label htmlFor="userName" className='col-span-1 text-sm'>Note</label>
+                                        <textarea id="notes" placeholder="Notes..." className="form-input py-2.5 text-sm col-span-4" name="user_name" />
+                                    </div>
+                                    <div className="flex items-center justify-center gap-6 pt-4">
+                                        <button type="submit" className="btn btn-success gap-2" >
+                                            <IconFile className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
+                                            Submit
+                                        </button>
+                                        <Link to="/pages/procurment/local_purchase/index"><button type="button" className="btn btn-danger gap-2" >
                                         <IconTrashLines className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
                                         Cancel
                                     </button></Link>
-                                </div>
-                            </form>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -860,5 +885,3 @@ const addLocalPurchase: React.FC = () => {
 };
 
 export default addLocalPurchase;
-
-

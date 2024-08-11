@@ -3,7 +3,7 @@ from datetime import datetime, date
 from typing import List, Optional
 
 class PurchaseItemInvoiceSchema(BaseModel):
-    item_name: Optional[int] = None
+    item_name: Optional[str] = None
     hs_code: Optional[str] = None
     qty: Optional[float] = None
     rate: Optional[float] = None
@@ -19,7 +19,7 @@ class PurchaseInvoiceSchema(BaseModel):
     supplier_name: Optional[str] = None
     supplier_email: Optional[str] = None
     supplier_phone: Optional[str] = None
-    supplier_type: Optional[str] = None
+    supplier_type: Optional[int] = None
     s_address: Optional[str] = None
     s_tin: Optional[str] = None
     s_bin_nid: Optional[str] = None

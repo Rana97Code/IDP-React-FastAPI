@@ -14,21 +14,18 @@ const PurchaseInvoice = () => {
     const baseUrl = user.base_url;
 
     useEffect(() => {
-        const token = localStorage.getItem('Token');
-        if (token) {
-            const bearer = JSON.parse(token);
-            const headers = { Authorization: `Bearer ${bearer}` }
+        if (user) {
         axios.get(`${baseUrl}/purchase/purchase_invoice/${params.id}`,{headers})
             .then((response) => {
                 setRawMaterialsRecords(response.data.items);
-                setChalanDate(response.data.supplierDetails.chalan_date);
-                setSuppliersName(response.data.supplierDetails.supplier_name);
-                setSuppliersEmail(response.data.supplierDetails.supplier_email);
-                setSuppliersPhone(response.data.supplierDetails.supplier_phone);
-                setSuppliersCountry(response.data.supplierDetails.country_name);
-                setSuppliersAddress(response.data.supplierDetails.s_address);
-                setSuppliersTin(response.data.supplierDetails.s_tin);
-                setSuppliersType(response.data.supplierDetails.supplier_type);
+                setChalanDate(response.data.chalan_date);
+                setSuppliersName(response.data.supplier_name);
+                setSuppliersEmail(response.data.supplier_email);
+                setSuppliersPhone(response.data.supplier_phone);
+                setSuppliersCountry(response.data.country_name);
+                setSuppliersAddress(response.data.s_address);
+                setSuppliersTin(response.data.s_tin);
+                setSuppliersType(response.data.supplier_type);
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
@@ -41,15 +38,6 @@ const PurchaseInvoice = () => {
         dispatch(setPageTitle('Export Table'));
     });
 
-    interface suppliers {
-        supplier_name: string;
-        supplier_email: string;
-        supplier_phone: string;
-        supplier_type: string;
-        s_address: string;
-        s_tin: string;
-      }
-      
       interface RecordWithIndex {
         [key: string]: any; // Define the type for each property in the record
         index: number; // Add index property
@@ -65,7 +53,6 @@ const PurchaseInvoice = () => {
         item_total: number;
     }
 
-    const [suppliersDetails, setSuppliersRecords] = useState<suppliers[]>([]);
     const [chalanDate, setChalanDate] = useState();
     const [supplierName, setSuppliersName] = useState();
     const [supplierEmail, setSuppliersEmail] = useState();
