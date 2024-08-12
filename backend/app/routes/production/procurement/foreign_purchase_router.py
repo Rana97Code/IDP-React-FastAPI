@@ -11,13 +11,13 @@ from sqlalchemy.sql.sqltypes import Numeric
 from app.models.inventory.opening_stock_model import OpeningStock, OpeningInsertSchema , OpeningStockSchema
 from app.models.relationship.supplier_model import Supplier, supplierBase, SupplierSchema
 from app.models.production.procurement.Purchase_model import Purchase,Purchase_item
-from app.schemas.production.procurement.ForeignPurchase_schema import ForeignPurchaseInsertSchema,ItemDetailsModel, PurchaseTableDetailsModel
+from app.schemas.production.procurement.ForeignPurchase_schema import ForeignPurchaseInsertSchema,ItemDetailsModel, ForeignPurchaseFetch
 from app.models.general_settings.hs_code_model import Hscode
 from app.models.inventory.item_model import Item, ItemSuggest
 
-Purchase_router = APIRouter()
+Foreign_purchase_router = APIRouter()
 
-@Purchase_router.post("/bmitvat/api/purchase/add-foreign-purchase", dependencies=[Depends(get_current_active_user)])
+@Foreign_purchase_router.post("/bmitvat/api/purchase/add-foreign-purchase", dependencies=[Depends(get_current_active_user)])
 async def create_foreign_purchase(fpurchase: ForeignPurchaseInsertSchema, db: Session = Depends(get_db)):
     try:
         srv = Purchase(
@@ -65,7 +65,7 @@ async def create_foreign_purchase(fpurchase: ForeignPurchaseInsertSchema, db: Se
                 vat_type = item.vat_type,
                 vatable_value = item.vatable_value,
                 rebate = item.rebate,
-                t_amount = item.t_amount,
+                t_amount = item.item_total,
                 purchase_date = srv.entry_date,
                 entry_date = srv.entry_date,
                 p_date = srv.entry_date
@@ -107,7 +107,7 @@ async def all_suggestitm(year: int, db:Session=Depends(get_db)):
     return json_items
 
 #foreing purchase ITem Search query
-@Purchase_router.post("/bmitvat/api/item/getItemSuggestions", response_model=List[ItemSuggest])
+@Foreign_purchase_router.post("/bmitvat/api/item/getItemSuggestions", response_model=List[ItemSuggest])
 async def suggest_items(request: Request,db:Session=Depends(get_db)):
     request_body = await request.body()
     decoded_string = request_body.decode()
@@ -128,7 +128,7 @@ async def suggest_items(request: Request,db:Session=Depends(get_db)):
         return []
 
 
-@Purchase_router.get("/bmitvat/api/purchase/get_item_details/{item_id}", response_model=ItemDetailsModel, dependencies=[Depends(get_current_active_user)])
+@Foreign_purchase_router.get("/bmitvat/api/purchase/get_item_details/{item_id}", response_model=ItemDetailsModel, dependencies=[Depends(get_current_active_user)])
 async def get_item_details_by_id(item_id: int, db: Session = Depends(get_db)):
     try:
         print(item_id)
@@ -161,27 +161,25 @@ async def get_item_details_by_id(item_id: int, db: Session = Depends(get_db)):
 
 
 
-# #get the value for foreign purchase index value:
-# @Purchase_router.get("/bmitvat/api/item/allitems",response_model=List[PurchaseTableDetailsModel], dependencies=[Depends(get_current_active_user)])
-# async def index(db:Session=Depends(get_db)):
+@Foreign_purchase_router.get("/bmitvat/api/foreign_purchase/all_foreign_purchase",response_model=List[ForeignPurchaseFetch], dependencies=[Depends(get_current_active_user)])
+async def index(db:Session=Depends(get_db)):
 
-#     #In ITEM shows data From unit data table 
-#     #x=db.query(Item, Hscode).join(Unit, Item.unit_id==Unit.id ).join(Hscode, Item.hs_code_id==Hscode.id)\
-#     x=db.query(Purchase, Supplier).join(Supplier, Purchase.supplier_id == Supplier.id )\
-#         .add_columns(,Item.stock_status,Item.status,Hscode.calculate_year,Item.created_by,Item.updated_by).all()
-#     #print(x)
-#     p_item =[]
-#     for pp in x:
-#         p_item.append({
-#            'id': pp.id,
-#            'item_name': pp.item_name,
-#            'description': pp.description,
-#            'item_type':pp.item_type,
-#            'hs_code':pp.hs_code,
-#            })
+    x=db.query(Purchase, Supplier).join(Supplier, Purchase.supplier_id==Supplier.id).filter(Purchase.purchase_type==2)\
+        .add_columns(Purchase.id,Supplier.supplier_name,Purchase.invoice_no,Purchase.vendor_inv,Purchase.chalan_date,Purchase.grand_total).all()
+    #print(x)
+    p_item =[]
+    for pp in x:
+        p_item.append({
+           'id': pp.id,
+           'invoice_no': pp.invoice_no,
+           'vendor_inv': pp.vendor_inv,
+           'chalan_date': pp.chalan_date,
+           'supplier_name': pp.supplier_name,
+           'grand_total': pp.grand_total,
+           })
 
-#     junit = jsonable_encoder(p_item)
-#     return JSONResponse(content=junit)
+    junit = jsonable_encoder(p_item)
+    return JSONResponse(content=junit)
 
 
 

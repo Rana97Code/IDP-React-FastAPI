@@ -13,7 +13,7 @@ from sqlalchemy.sql.sqltypes import Numeric
 from app.models.inventory.InventoryStock_model import Stock, StockHistory
 from app.models.production.procurement.Purchase_model import Purchase,Purchase_item
 from app.models.relationship.supplier_model import Supplier
-from app.schemas.production.procurement.ForeignPurchase_schema import ForeignPurchaseInsertSchema,ItemDetailsModel, PurchaseTableDetailsModel
+from app.schemas.production.procurement.ForeignPurchase_schema import ForeignPurchaseInsertSchema,ItemDetailsModel
 from app.schemas.production.procurement.ServicePurchase_schema import ServicePurchaseInsertSchema, ServicePurchaseFetch
 from app.models.general_settings.hs_code_model import Hscode
 from app.models.inventory.item_model import Item, ItemSuggest

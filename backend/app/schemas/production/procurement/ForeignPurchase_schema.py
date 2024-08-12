@@ -48,9 +48,15 @@ class ForeignPurchaseInsertSchema(BaseModel):
     entry_date: Optional[date] = None
     chalan_date: Optional[date] = None
 
-
-
     items: List[foreignPurchaseItemInsertSchema]
+
+
+class ForeignPurchaseFetch(BaseModel):
+    invoice_no: Optional[str] = None
+    grand_total: Optional[float] = None
+    supplier_name: Optional[str] = None
+    lc_number: Optional[str] = None
+    supplier_id: Optional[int] = None
 
     # class Config:
     #     from_attributes = True
@@ -74,15 +80,6 @@ class ItemDetailsModel(BaseModel):
         from_mode = True
 
 
-class PurchaseTableDetailsModel(BaseModel):
-    invoice_no: Optional[str] = None
-    grand_total: Optional[float] = None
-    supplier_name: Optional[str] = None
-    lc_number: Optional[str] = None
-    supplier_id: Optional[int] = None
-
-    class Config:
-        from_mode = True
 
 
 
